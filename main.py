@@ -1,16 +1,59 @@
-# This is a sample Python script.
+#Lecture fichier automate
 
-# Press Maj+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+def get_alphabet (lignes) :
+    alphabet = []
+    for i in range(5, len(lignes)) :
+        if lignes[i][1] not in alphabet :
+            alphabet.append(lignes[i][1])
+    alphabet = sorted(alphabet)
+    return alphabet
+
+def get_transition(matrice, lignes) :
+    alphabet = get_alphabet(lignes)
+    for i in range(5, len(lignes)):
+        matrice[int(lignes[i][0])][alphabet.index(lignes[i][1])] = int(lignes[i][2])
+    return matrice
+
+def get_inital(lignes) :
+    initial = []
+    for i in range(0, len(lignes[2])-1, 2) :
+        initial.append(int(lignes[2][i]))
+    return initial
+
+def get_final(lignes) :
+    final = []
+    for i in range(0, len(lignes[3])-1, 2) :
+        final.append(int(lignes[3][i]))
+    return final
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+with open ("Automates/bob.txt", "r") as fichier :
+    lignes = fichier.readlines()
+    table_transition_fichier = []
+
+    for i in range (int(lignes[1])) :
+        newline = []
+        for j in range (int(lignes[0])) :
+            newline.append(-1)
+        table_transition_fichier.append(newline)
+
+    table_transition_fichier = get_transition(table_transition_fichier, lignes)
+    initial = get_inital(lignes)
+    final = get_final(lignes)
 
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('Thomas')
+for i in range(len(table_transition_fichier)) :
+    for j in range(len(table_transition_fichier[i])) :
+        if (table_transition_fichier[i][j]==-1) :
+            print("-", end=" ")
+        else :
+            print(table_transition_fichier[i][j], end = " ")
+    print()
+print("Etat initiaux : ",end  = " ")
+for i in range(len(initial)) :
+    print(initial[i], end = " ")
+print()
+print("Etat finaux : ", end=" ")
+for i in range(len(final)):
+    print(final[i], end = " ")
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
