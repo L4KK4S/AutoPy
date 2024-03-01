@@ -69,5 +69,3 @@ class Automaton:
         output_text += ("└─────────" + "┴─────────" * len(symbols) + "┘")
 
         return output_text
-
-

@@ -2,7 +2,6 @@ from automaton import Automaton
 import file
 import os
 
-
 def file_input():
 
     is_input_valid = False
@@ -24,7 +23,9 @@ def file_input():
         if not input_text.endswith('.txt'):
             print("Le fichier spécifié n'est pas valide. Veuillez réessayer.")
             input_text = file_input()
-
+        elif not os.path.exists(input_text):
+            print("Le fichier spécifié n'existe pas. Veuillez réessayer.")
+            input_text = file_input()
 
 
     return input_text

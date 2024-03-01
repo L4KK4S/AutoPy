@@ -19,6 +19,7 @@ def finish():
 root = tk.Tk()
 root.title("Sélection du fichier de l'automate")
 
+
 file_selection_btn = tk.Button(root, text="Sélectionner un fichier", command=file_choice)
 file_selection_btn.pack(pady=20)
 
