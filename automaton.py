@@ -1,7 +1,9 @@
 
+
 class Automaton:
 
     def __init__(self, filename):
+        self.filename = filename
         self.alphabet = None
         self.states = None
         self.initals_states = None
@@ -10,62 +12,113 @@ class Automaton:
         self.initialize(filename)
 
     def initialize(self, filename):
-        
+
+        # ouverture du fichier et lecture des lignes
         with open(filename, 'r') as file:
             lines = file.readlines()
-            alphabet_size = int(lines[0])
-            nb_states = int(lines[1])
-            states = list(range(nb_states))  # Crée une liste d'états
-            self.initals_states = list(map(int, lines[2].split()[1:]))
-            self.terminal_states = list(map(int, lines[3].split()[1:]))
-            transitions = []
-            for line in lines[5:]:
-                transition_data = line.strip()
-                start_state = int(transition_data[0])
-                symbol = transition_data[1]
-                terminal_state = int(transition_data[2])
-                transitions.append((start_state, symbol, terminal_state))
 
-            self.alphabet = alphabet_size
-            self.states = states
-            self.transitions = transitions
+            # initialisation de l'alphabet
+            self.alphabet = [chr(97+i) for i in range(int(lines[0]))]
+
+            # initialisation des états
+            self.states = [State(self, [i], [[] for _ in range(len(self.alphabet))]) for i in range(int(lines[1]))]
+
+            # initialisation des états initiaux et terminaux
+            self.initals_states = [int(x) for x in lines[2].split()[1:]]
+            for i in self.initals_states:
+                for j in self.states:
+                    if j.get_value() == str(i):
+                        j.is_initial = True
+
+            self.terminal_states = [int(x) for x in lines[3].split()[1:]]
+            for i in self.terminal_states:
+                for j in self.states:
+                    if j.get_value() == str(i):
+                        j.is_terminal = True
+
+            # initialisation des transitions
+            self.transitions = [t[:3] for t in lines[5:]]
+            for t in self.transitions:
+                for state in self.states:
+                    if state.get_value() == str(t[0]):
+                        state.transitions[self.alphabet.index(t[1])].append(t[2])
 
 
     def __str__(self):
+        # première ligne
+        output = "┌─────────" + "┬─────────" * (len(self.alphabet) + 1) + "┐\n"
 
-        output_text = ""
-
-        # Collecte de tous les symboles uniques
-        symbols = sorted(set(transition[1] for transition in self.transitions))
-
-        # Création des en-têtes de colonnes
-        headers = ["État"] + symbols
-
-        # Affichage de la première ligne
-        output_text += ("┌─────────" + "┬─────────" * len(symbols) + "┐\n")
-
-        # Affichage des en-têtes
-        output_text += "│"
+        # entêtes
+        headers = ["E/S", "État"] + self.alphabet
+        output += "│"
         for header in headers:
-                output_text += (header.center(9) + "│")
-        output_text += "\n"
+            output += (header.center(9) + "│")
 
-        # Affichage de la ligne de séparation
-        output_text += ("├─────────" + "┼─────────" * len(symbols) + "┤\n")
+        output += "\n"
 
-        # Affichage des lignes de transition
-        for etat in self.states:
-            output_text += "│"
-            output_text += (str(etat).center(9) + "│")
-            for symbol in symbols:
-                transitions = [transition[2] for transition in self.transitions if transition[0] == etat and transition[1] == symbol]
-                if transitions:
-                    output_text += (",".join(map(str, transitions)).center(9) + "│")
+        # ligne de séparation
+        output += ("├─────────" + "┼─────────" * (len(self.alphabet) + 1) + "┤\n")
+
+        # transitions
+        for s in self.states:
+
+            # entrées/sorties
+            if s.is_initial and s.is_terminal:
+                output += "│" + "E/S".center(9) + "│"
+            elif s.is_initial:
+                output += "│" + "E".center(9) + "│"
+            elif s.is_terminal:
+                output += "│" + "S".center(9) + "│"
+            else:
+                output += "│" + " ".center(9) + "│"
+
+            # état
+            output += str(s.get_value()).center(9) + "│"
+
+            # transitions
+            for i in range(len(self.alphabet)):
+                if not all(not sublist for sublist in s.transitions[i]):
+                    output += (",".join(map(str, s.transitions[i])).center(9) + "│")
                 else:
-                    output_text += ("-".center(9) + "│")
-            output_text += "\n"
+                    output += ("-".center(9) + "│")
 
-        # Affichage de la ligne de fin
-        output_text += ("└─────────" + "┴─────────" * len(symbols) + "┘")
+            output += "\n"
 
-        return output_text
+            # ligne de séparation
+            if s != self.states[-1]:
+                output += ("├─────────" + "┼─────────" * (len(self.alphabet) + 1) + "┤\n")
+
+
+
+        # dernière ligne
+        output += ("└─────────" + "┴─────────" * (len(self.alphabet) + 1) + "┘")
+
+        return output
+
+
+class State():
+
+    def __init__(self, automaton, values, transitions):
+        self.automaton = automaton
+        self.values = values
+        self.transitions = transitions
+        self.is_initial = False
+        self.is_terminal = False
+
+    def get_value(self):
+        return "".join(str(e) for e in self.values)
+
+    def __str__(self):
+        return "State (" + "".join(str(e) for e in self.values) + ")" + "".join("\n" + self.automaton.alphabet[i] + " : " + (", ".join(str(e) for e in self.transitions[i]) if not all(not sublist for sublist in self.transitions[i]) else "-") for i in range(len(self.automaton.alphabet)))
+
+        """
+        output = "State (" + "".join(str(e) for e in self.values) + ")"
+        
+        for i in range(len(self.automaton.alphabet)):
+            output += "\n" + self.automaton.alphabet[i] + " : " + (", ".join(str(e) for e in self.transitions[i]) if not all(not sublist for sublist in self.transitions[i]) else "-")
+            
+        return output
+        """
+
+
+
