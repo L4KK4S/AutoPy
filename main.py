@@ -13,7 +13,11 @@ def get_alphabet (lignes) :
 def get_transition(matrice, lignes) :
     alphabet = get_alphabet(lignes)
     for i in range(5, len(lignes)):
-        matrice[int(lignes[i][0])][alphabet.index(lignes[i][1])] = int(lignes[i][2])
+        if matrice[int(lignes[i][0])][alphabet.index(lignes[i][1])] == -1 :
+            matrice[int(lignes[i][0])][alphabet.index(lignes[i][1])] = int(lignes[i][2])
+        else :
+            matrice[int(lignes[i][0])][alphabet.index(lignes[i][1])]*= 10
+            matrice[int(lignes[i][0])][alphabet.index(lignes[i][1])]+=int(lignes[i][2])
     return matrice
 
 # Fonction pour récupérer dans une liste les états initiaux
@@ -62,3 +66,4 @@ print()
 print("Etat finaux : ", end=" ")
 for i in range(len(final)):
     print(final[i], end = " ")
+
