@@ -49,6 +49,7 @@ with open ("Automates/bob.txt", "r") as fichier :
     table_transition_fichier = get_transition(table_transition_fichier, lignes)
     initial = get_inital(lignes)
     final = get_final(lignes)
+    alphabet = get_alphabet(lignes)
 
 # Affichage de test
 
@@ -67,3 +68,20 @@ print("Etat finaux : ", end=" ")
 for i in range(len(final)):
     print(final[i], end = " ")
 
+print()
+def determine (alphabet, matrice, initial) :
+    matrice_d = [(len(alphabet))*[-1]]
+    print(initial)
+
+    new_state = []
+    for i in range (len(initial)-1) :
+        #new_state[0] += str(initial[i])
+        for j in range(len(alphabet)) :
+            if matrice_d[0][j] == -1:
+                matrice_d[0][j] = matrice[initial[i]][j]
+            else :
+                matrice_d[0][j]*=10
+                matrice_d[0][j] += matrice[initial[i]][j]
+
+
+determine(alphabet, table_transition_fichier, initial)
