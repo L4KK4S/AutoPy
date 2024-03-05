@@ -46,12 +46,16 @@ def validate_input(input_text):
 
 def main():
 
+
     input_text = file_input()
     while not validate_input(input_text):
         input_text = file_input()
 
     automaton1 = Automaton(input_text)
     print(automaton1)
+
+    """automaton1 = Automaton("bob.txt")
+    print(automaton1)"""
 
 if __name__ == "__main__":
     main()

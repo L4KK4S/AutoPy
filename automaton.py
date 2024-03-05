@@ -70,7 +70,6 @@ class Automaton:
 
         return output_text
 
-
     def is_standard(self):
         #Vérification qu'on a un unique état initial
         if len(self.initals_states) != 1: #on regarde si on a un nombre d'états initiaux différent de 1
