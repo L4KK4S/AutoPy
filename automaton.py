@@ -69,3 +69,19 @@ class Automaton:
         output_text += ("└─────────" + "┴─────────" * len(symbols) + "┘")
 
         return output_text
+
+
+    def is_standard(self):
+        #Vérification qu'on a un unique état initial
+        if len(self.initals_states) != 1: #on regarde si on a un nombre d'états initiaux différent de 1
+            return False # L'automate est non standard
+
+        initial_state = self.initals_states[0] #stock l'unique état initial dans la variable initial_state
+
+        # Vérification qu'il n'y a aucune transition menant à l'unique état initial
+        for transition in self.transitions: #on parcourt toutes les transitions
+            if transition[2] == initial_state: #on regarde si l'état d'arrivée de la transition correspond à l'état initial
+                return False
+
+        # Si les deux conditions sont remplies, l'automate est standard
+        return True
