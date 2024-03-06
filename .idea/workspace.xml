@@ -43,7 +43,7 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Python.main">
     <configuration default="true" type="DjangoTestsConfigurationType">
       <module name="AutoPy" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -236,6 +236,10 @@
       <option name="USE_PATTERN" value="false" />
       <method v="2" />
     </configuration>
+    <list>
+      <item itemvalue="Python.main" />
+      <item itemvalue="Python.file" />
+    </list>
     <recent_temporary>
       <list>
         <item itemvalue="Python.file" />

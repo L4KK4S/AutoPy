@@ -57,5 +57,6 @@ def main():
     """automaton1 = Automaton("bob.txt")
     print(automaton1)"""
 
+    automaton1.is_standard()
 if __name__ == "__main__":
     main()
