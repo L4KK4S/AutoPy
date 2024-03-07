@@ -60,3 +60,4 @@ def main():
     automaton1.is_standard()
 if __name__ == "__main__":
     main()
+    print()
