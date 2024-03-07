@@ -57,6 +57,19 @@ def main():
     """automaton1 = Automaton("bob.txt")
     print(automaton1)"""
 
-    automaton1.is_standard()
+    automaton1.is_standard() #appel de la fonction is_standard pour afficher si l'automate est standard ou non
+
+    #Si l'automate n'est pas standard, on demande à l'utilisateur si il veut le standardiser
+    if not automaton1.is_standard():
+        standardize_input = input("L'automate n'est pas standard. Voulez-vous le standardiser ? (o/n) : ")
+        if standardize_input == "o":
+            print("Automate standardisé : ")
+            standard_automaton = automaton1.standardize_automaton() #appel de la fonction de standardisation
+            print(standard_automaton)#affiche l'automate standardisé
+        else:
+            print("Vous avez choisi de ne pas standardiser l'automate ou vous vous êtes trompé de touche.")
+
+
+
 if __name__ == "__main__":
     main()

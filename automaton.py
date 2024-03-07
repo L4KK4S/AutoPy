@@ -73,7 +73,6 @@ class Automaton:
     def is_standard(self):
         #Vérification qu'on a un unique état initial
         if len(self.initals_states) != 1: #on regarde si on a un nombre d'états initiaux différent de 1
-            print("L'automate n'est pas standard")
             return False # L'automate est non standard
 
         initial_state = self.initals_states[0] #stock l'unique état initial dans la variable initial_state
@@ -81,9 +80,39 @@ class Automaton:
         # Vérification qu'il n'y a aucune transition menant à l'unique état initial
         for transition in self.transitions: #on parcourt toutes les transitions
             if transition[2] == initial_state: #on regarde si l'état d'arrivée de la transition correspond à l'état initial
-                print("L'automate n'est pas standard")
                 return False
 
         # Si les deux conditions sont remplies, l'automate est standard
         print("L'automate est standard")
         return True
+
+    def standardize_automaton(self): #fonction qui standardise l'automate
+        new_initial_state = max(self.states) + 1 #Ajout de l'état initial qui au lieu de s'appeler i ça sera notre nombre d'étas + 1
+        self.states.append(new_initial_state)  # Ajouter le nouvel état initial à la liste des états
+
+        old_initial_states = self.initals_states.copy() #Sauvegarde des anciens états initiaux
+
+        self.initals_states = [new_initial_state] #L'état initial devient l'unique état initial
+
+        # Déterminer si le nouvel état initial est terminal ou non-terminal en regardant dans la liste des états terminaux
+        is_terminal = any(state in self.terminal_states for state in old_initial_states)
+
+        new_transitions = []  # Liste pour stocker les nouvelles transitions
+
+        # Ajout des nouvelles transitions depuis le nouvel état initial
+        for initial_state in old_initial_states:
+            for transition in self.transitions:
+                if transition[0] == initial_state:
+                    new_transitions.append((new_initial_state, transition[1], transition[2]))
+
+
+        # Ajouter les nouvelles transitions à la liste self.transitions
+        self.transitions.extend(new_transitions)
+
+        print("etats", self.states)
+
+        # Si i est terminal, on l'ajoute dans la liste des états terminaux
+        if is_terminal:
+            self.terminal_states.append(new_initial_state)
+
+        return self
