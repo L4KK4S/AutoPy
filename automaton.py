@@ -1,6 +1,10 @@
 
+# --------------------------------- Class Automaton ------------------------------------ #
 
 class Automaton:
+
+
+    # -------------------------------- Initialisation de l'automate -------------------------------- #
 
     def __init__(self, filename):
         self.filename = filename
@@ -9,7 +13,7 @@ class Automaton:
         self.initals_states = None
         self.terminal_states = None
         self.transitions = None
-        self.initialize(filename)
+        self.initialize(self.filename)
 
     def initialize(self, filename):
 
@@ -29,12 +33,15 @@ class Automaton:
                 for j in self.states:
                     if j.get_value() == str(i):
                         j.is_initial = True
+            self.initals_states = [state for state in self.states if state.is_initial]
+
 
             self.terminal_states = [int(x) for x in lines[3].split()[1:]]
             for i in self.terminal_states:
                 for j in self.states:
                     if j.get_value() == str(i):
                         j.is_terminal = True
+            self.terminal_states = [state for state in self.states if state.is_terminal]
 
             # initialisation des transitions
             self.transitions = [t[:3] for t in lines[5:]]
@@ -73,7 +80,10 @@ class Automaton:
                 output += "│" + " ".center(9) + "│"
 
             # état
-            output += str(s.get_value()).center(9) + "│"
+            if s.get_value() == "-2":
+                output += "I".center(9) + "│"
+            else:
+                output += (s.get_value().center(9) + "│")
 
             # transitions
             for i in range(len(self.alphabet)):
@@ -95,6 +105,93 @@ class Automaton:
 
         return output
 
+    # ------------------------------------------------------------------------------------------ #
+
+    # ------------------------------ Standardisation (Anaelle) --------------------------------- #
+
+    def is_standard(self):
+
+        # vérification qu'on a un unique état initial
+        if len(self.initals_states) != 1:  # on regarde si on a un nombre d'états initiaux différent de 1
+            return False  # l'automate est non standard
+
+        initial_state = self.initals_states[0]  # stock l'unique état initial dans la variable initial_state
+
+        # vérification qu'il n'y a aucune transition menant à l'unique état initial
+        for transition in self.transitions:  # on parcourt toutes les transitions
+            if transition[2] == initial_state:  # on regarde si l'état d'arrivée de la transition correspond à l'état initial
+                return False
+
+        # si les deux conditions sont remplies, l'automate est standard
+        return True
+
+    def standardize(self):  # fonction qui standardise l'automate
+
+        if self.is_standard():  # Si l'automate est déjà standard, on ne fait rien
+            return self
+
+        # stockage des anciens états
+        old_states = self.states.copy()
+
+        # ajout de l'état initial I qui aura pour valeur -2
+        new_initial_state = State(self, [-2], [[] for _ in range(len(self.alphabet))])
+
+        # mettre la valeur is_initial de I initial à False
+        new_initial_state.is_initial = True
+
+        # mettre la valeur is_terminal de I initial à True si un des états initiaux de l'automate est terminal
+        for state in self.initals_states:
+            if state.is_terminal:
+                new_initial_state.is_terminal = True
+                break
+
+        # ajouter le nouvel état initial à la liste des états
+        self.states.append(new_initial_state)
+
+        # l'état initial devient l'unique état initial
+        self.initals_states = [new_initial_state]
+
+        # ajout des nouvelles transitions depuis le nouvel état initial
+        for state in old_states:
+            if state.is_initial:
+                new_initial_state.transitions.extend(transition for transition in state.transitions if transition not in new_initial_state.transitions)
+
+
+        # ajout des transition du noucel état initial à l'automate
+        for letter in self.alphabet:
+            for state_transition in new_initial_state.transitions:
+                print(letter, state_transition)
+                if len(state_transition) != 0:
+                    for transition in state_transition:
+                        self.transitions.append(new_initial_state.get_value() + letter + transition)
+
+        # mettre à jour is_initial pour les anciens états
+        for state in self.states:
+            for old_state in old_states:
+                if old_state.get_value() == state.get_value():
+                    if old_state.is_initial:
+                        state.is_initial = False
+
+
+        # trier les états par valeur croissante
+        self.states.sort(key=lambda x: x.values[0])
+
+
+        return self
+
+    # ------------------------------------------------------------------------------------------ #
+
+    # -------------------------------- Completion (Camille) ------------------------------------ #
+    # ------------------------------------------------------------------------------------------ #
+
+    # ----------------------------- Determinisation (Thomas) ----------------------------------- #
+    # ------------------------------------------------------------------------------------------ #
+
+    # ------------------------------- Minimisation (Maryam) ------------------------------------ #
+    # -------------------------------- Completion (Camille) ------------------------------------ #
+
+
+# --------------------------------- Class State ------------------------------------ #
 
 class State():
 
@@ -120,5 +217,6 @@ class State():
         return output
         """
 
+# ------------------------------------------------------------------------------------------ #
 
 
