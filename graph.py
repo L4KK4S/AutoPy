@@ -25,10 +25,15 @@ def graph(automaton):
     pos = nx.spring_layout(G)
 
     # Coloration des nœuds
+
+    active_states = automaton.states.copy()
+    active_states = [state for state in active_states if state.get_value() in G.nodes()]
+    if "I" in G.nodes():
+        active_states.append(automaton.states[0])
+
     node_colors = [""] * len(G.nodes())
     for node in G.nodes():
-        for i, state in enumerate(automaton.states):
-
+        for i, state in enumerate(active_states):
             if state.get_value() == node or "I" == node:
                 if state.is_initial and state.is_terminal:
                     node_colors[i] = 'violet'                    # etat initial et terminal

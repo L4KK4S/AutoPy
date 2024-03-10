@@ -176,6 +176,9 @@ class Main:
                     file.write(state.get_value() + " ")
                 file.write("\n")
 
+                # nombres de transitions
+                file.write(str(len(self.automaton.transitions)) + "\n")
+
                 # transitions
                 for transition in self.automaton.transitions:
                     file.write(transition)
@@ -184,9 +187,10 @@ class Main:
 
 if __name__ == "__main__":
     main = Main()
-    main.automatons.append(Automaton("s.txt"))
+    main.automatons.append(Automaton("bob_standard.txt"))
     main.automatons.append(Automaton("bob.txt"))
-
     main.automaton = main.automatons[0]
+
+    graph.graph(main.automaton)
 
     main.loop()
