@@ -190,7 +190,4 @@ if __name__ == "__main__":
     main.automatons.append(Automaton("bob_standard.txt"))
     main.automatons.append(Automaton("bob.txt"))
     main.automaton = main.automatons[0]
-
-    graph.graph(main.automaton)
-
     main.loop()
