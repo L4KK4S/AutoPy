@@ -25,7 +25,7 @@ class Automaton:
             self.alphabet = [chr(97+i) for i in range(int(lines[0]))]
 
             # initialisation des états
-            self.states = [State(self, [i], [[] for _ in range(len(self.alphabet))]) for i in range(int(lines[1]))]
+            self.states = [State(self, [i]) for i in range(int(lines[1]))]
 
             # initialisation des états initiaux et terminaux
             self.initals_states = [int(x) for x in lines[2].split()[1:]]
@@ -48,7 +48,7 @@ class Automaton:
             for t in self.transitions:
                 for state in self.states:
                     if state.get_value() == str(t[0]):
-                        state.transitions[self.alphabet.index(t[1])].append(t[2])
+                        state.transitions[t[1]].append(t[2])
 
 
     def __str__(self):
@@ -87,8 +87,8 @@ class Automaton:
 
             # transitions
             for i in range(len(self.alphabet)):
-                if not all(not sublist for sublist in s.transitions[i]):
-                    output += (",".join(map(str, s.transitions[i])).center(9) + "│")
+                if s.transitions[self.alphabet[i]]:
+                    output += (",".join(map(str, s.transitions[self.alphabet[i]])).center(9) + "│")
                 else:
                     output += ("-".center(9) + "│")
 
@@ -134,7 +134,7 @@ class Automaton:
         old_states = self.states.copy()
 
         # ajout de l'état initial I qui aura pour valeur -2
-        new_initial_state = State(self, [-2], [[] for _ in range(len(self.alphabet))])
+        new_initial_state = State(self, [-2])
 
         # mettre la valeur is_initial de I initial à False
         new_initial_state.is_initial = True
@@ -154,16 +154,13 @@ class Automaton:
         # ajout des nouvelles transitions depuis le nouvel état initial
         for state in old_states:
             if state.is_initial:
-                new_initial_state.transitions.extend(transition for transition in state.transitions if transition not in new_initial_state.transitions)
+                for letter, destinations in state.transitions.items():
+                    new_initial_state.transitions[letter].extend(destinations)
 
-
-        # ajout des transition du noucel état initial à l'automate
+        # ajout des transition du nouvel état initial à l'automate
         for letter in self.alphabet:
-            for state_transition in new_initial_state.transitions:
-                print(letter, state_transition)
-                if len(state_transition) != 0:
-                    for transition in state_transition:
-                        self.transitions.append(new_initial_state.get_value() + letter + transition)
+            for destination in new_initial_state.transitions[letter]:
+                self.transitions.append(new_initial_state.get_value() + letter + destination)
 
         # mettre à jour is_initial pour les anciens états
         for state in self.states:
@@ -195,10 +192,10 @@ class Automaton:
 
 class State():
 
-    def __init__(self, automaton, values, transitions):
+    def __init__(self, automaton, values):
         self.automaton = automaton
         self.values = values
-        self.transitions = transitions
+        self.transitions = {letter: [] for letter in automaton.alphabet}
         self.is_initial = False
         self.is_terminal = False
 
@@ -206,16 +203,12 @@ class State():
         return "".join(str(e) for e in self.values)
 
     def __str__(self):
-        return "State (" + "".join(str(e) for e in self.values) + ")" + "".join("\n" + self.automaton.alphabet[i] + " : " + (", ".join(str(e) for e in self.transitions[i]) if not all(not sublist for sublist in self.transitions[i]) else "-") for i in range(len(self.automaton.alphabet)))
-
-        """
         output = "State (" + "".join(str(e) for e in self.values) + ")"
-        
-        for i in range(len(self.automaton.alphabet)):
-            output += "\n" + self.automaton.alphabet[i] + " : " + (", ".join(str(e) for e in self.transitions[i]) if not all(not sublist for sublist in self.transitions[i]) else "-")
-            
+
+        for letter, destinations in self.transitions.items():
+            output += "\n" + letter + " : " + (", ".join(str(dest) for dest in destinations) if destinations else "-")
+
         return output
-        """
 
 # ------------------------------------------------------------------------------------------ #
 
