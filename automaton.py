@@ -1,3 +1,4 @@
+import re
 
 # --------------------------------- Class Automaton ------------------------------------ #
 
@@ -25,7 +26,13 @@ class Automaton:
             self.alphabet = [chr(97+i) for i in range(int(lines[0]))]
 
             # initialisation des états
-            self.states = [State(self, [i]) for i in range(int(lines[1]))]
+            for line in lines:
+                if "-2" in line:
+                    self.states = [State(self, [i]) for i in range(int(lines[1]) - 1)]
+                    self.states.append(State(self, [-2]))
+                    self.states.sort(key=lambda x: x.values[0])
+                else:
+                    self.states = [State(self, [i]) for i in range(int(lines[1]))]
 
             # initialisation des états initiaux et terminaux
             self.initals_states = [int(x) for x in lines[2].split()[1:]]
@@ -44,11 +51,12 @@ class Automaton:
             self.terminal_states = [state for state in self.states if state.is_terminal]
 
             # initialisation des transitions
-            self.transitions = [t[:3] for t in lines[5:]]
-            for t in self.transitions:
+            temp_transitions = [re.match(r'([-+]?\d+)([a-zA-Z])([-+]?\d+)', t) for t in lines[5:]]
+            self.transitions = [t[0] for t in temp_transitions]
+            for t in temp_transitions:
                 for state in self.states:
-                    if state.get_value() == str(t[0]):
-                        state.transitions[t[1]].append(t[2])
+                    if state.get_value() == str(t.group(1)):
+                        state.transitions[t.group(2)].append(t.group(3))
 
 
     def __str__(self):

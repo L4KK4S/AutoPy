@@ -5,14 +5,10 @@ import matplotlib.pyplot as plt
 from automaton import Automaton
 
 
-
 def graph(automaton):
 
     # Créer un graphe
     G = nx.DiGraph()
-
-    # Ajouter des nœuds
-    #G.add_nodes_from([state.get_value() for state in automaton.states])
 
     # Ajouter des arêtes pondérées avec des attributs différents
     for transition in automaton.transitions:
@@ -24,11 +20,9 @@ def graph(automaton):
             if l[i] == "-2":
                 l[i] = "I"
         G.add_edge(l[0], l[1], label=l[2])
-        print(l)
 
     # Positionnement des nœuds
     pos = nx.spring_layout(G)
-
 
     # Coloration des nœuds
     node_colors = [""] * len(G.nodes())
@@ -37,13 +31,13 @@ def graph(automaton):
 
             if state.get_value() == node or "I" == node:
                 if state.is_initial and state.is_terminal:
-                    node_colors[i] = 'violet'
+                    node_colors[i] = 'violet'                    # etat initial et terminal
                 elif state.is_initial:
-                    node_colors[i]  = 'green'
+                    node_colors[i]  = 'green'                    # etat initial
                 elif state.is_terminal:
-                    node_colors[i]  = 'red'
+                    node_colors[i]  = 'red'                      # etat terminal
                 else:
-                    node_colors[i]  = 'blue'
+                    node_colors[i]  = 'blue'                     # etat normal
 
     # Dessiner les nœuds
     nx.draw_networkx_nodes(G, pos, node_size=700, node_color=node_colors)
@@ -59,13 +53,11 @@ def graph(automaton):
     node_labels = {node: str(node) for node in G.nodes()}
     nx.draw_networkx_labels(G, pos, labels=node_labels)
 
-
-
     # Afficher le graphe
     plt.axis('off')
     plt.show()
 
-
-automaton1 = Automaton("bob.txt")
-automaton1.standardize()
-graph(automaton1)
+if __name__ == "__main__":
+    automaton1 = Automaton("bob.txt")
+    automaton1.standardize()
+    graph(automaton1)
