@@ -12,7 +12,7 @@ class Main:
 /    \) \/ (  )( (  O )) __/ )  / 
 \_/\_/\____/ (__) \__/(__)  (__/  
                                 """
-        self.help_text = "\nBienvenue sur Autopy, un programme permettant de gérer es automates finis, voici la liste des commabdes et leur fonction:\n\n" \
+        self.help_text = "\nBienvenue sur Autopy, un programme permettant de gérer les automates finis, voici la liste des commandes et leurs fonctions:\n\n" \
                          "     help: permet d'afficher l'aide\n" \
                          "     list: liste les différents automates chargés\n" \
                          "     load <fichier>.txt: charge un automate à partir d'un fichier texte\n" \
