@@ -116,3 +116,4 @@ class Automaton:
             self.terminal_states.append(new_initial_state)
 
         return self
+
