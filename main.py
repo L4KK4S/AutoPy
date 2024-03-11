@@ -154,7 +154,7 @@ class Main:
         else:
             is_input_valid = True
 
-        return is_input_valid
+        return is_input_valid #coucou
 
     def save_automaton(self, filename):
 
