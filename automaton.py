@@ -193,6 +193,51 @@ class Automaton:
     # ------------------------------------------------------------------------------------------ #
 
     # ------------------------------- Minimisation (Maryam) ------------------------------------ #
+
+    def minimise(self):
+
+        # Initialisation de la partition 0
+        P = [self.terminal_states]
+
+        # Création de la liste d'états non terminaux
+        NT_states = self.states.copy()
+        for i in range (len(self.terminal_states)):
+            if (self.terminal_states[i] in NT_states) :
+                NT_states.remove(self.terminal_states[i])
+
+        P.append(NT_states)
+        print(P[0])
+        print(P[1])
+
+        # Création des matrices de transitions que l'on va comparer pour savoir si l'automate est minime
+        prev_group = []
+        cur_group = []
+
+        # Création de la matrice vide
+        for i in range(len(self.states)):
+            cur_group.append([])
+
+        # Boucle pour créer matrice transition
+
+        # Parcours chaque case
+        for i in range(len(self.states)):
+            # Parcours chaque colonne
+            for j in range(len(self.alphabet)) :
+                # Regarde dans quel groupe de P appartient la transition actuelle
+                for k in range(len(P)):
+                    if (self.states[i].transitions.get(self.alphabet[k]) in P[k]) :
+                        cur_group[i].append(k)
+
+
+
+        for i in range(len(cur_group)):
+            print(cur_group[i])
+
+
+
+
+
+
     # -------------------------------- Completion (Camille) ------------------------------------ #
 
 

@@ -126,6 +126,8 @@ class Main:
             # commande quit: quitte le programme
             elif command[0] == "quit" or command[0] == "exit":
                 self.run = False
+            elif command[0] == "m" :
+                self.automaton.minimise()
 
             # commande inconnue
             else:
@@ -189,5 +191,8 @@ if __name__ == "__main__":
     main = Main()
     main.automatons.append(Automaton("bob_standard.txt"))
     main.automatons.append(Automaton("bob.txt"))
-    main.automaton = main.automatons[0]
-    main.loop()
+    main.automatons.append(Automaton("bob_determiniser.txt"))
+    main.automaton = main.automatons[2]
+
+    main.automaton.minimise()
+    #main.loop()
