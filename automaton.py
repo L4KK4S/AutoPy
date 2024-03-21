@@ -197,41 +197,97 @@ class Automaton:
     def minimise(self):
 
         # Initialisation de la partition 0
-        P = [self.terminal_states]
+        P = [self.terminal_states, [state for state in self.states if state not in self.terminal_states]]
 
-        # Création de la liste d'états non terminaux
-        NT_states = self.states.copy()
-        for i in range (len(self.terminal_states)):
-            if (self.terminal_states[i] in NT_states) :
-                NT_states.remove(self.terminal_states[i])
-
-        P.append(NT_states)
-        print(P[0])
-        print(P[1])
-
-        # Création des matrices de transitions que l'on va comparer pour savoir si l'automate est minime
-        prev_group = []
+        # Création du tableau de transitions
         cur_group = []
 
-        # Création de la matrice vide
+        # Création du tableau vide
         for i in range(len(self.states)):
             cur_group.append([])
 
         # Boucle pour créer matrice transition
 
-        # Parcours chaque case
+        # Tableau d'alias de str pour pouvoir comparer les transitions
+        P_str = []
+        for i in range(len(P)):
+            sub_group = []
+            for j in range(len(P[i])):
+                temp = [str(v) for v in P[i][j].values]
+                temp_str = "".join(temp)
+                sub_group.append(temp_str)
+            P_str.append(sub_group)
+
+        print(P_str)
+
+
+        # Création d'un tableau d'alias int pour pouvoir avoir une correspondance dans le tab de transition sans convertir le str
+        P_int = []
+        for i in range(len(P)):
+            sub_group = []
+            for j in range(len(P[i])):
+                sub_group.append(P[i][j].values[0])
+            P_int.append(sub_group)
+
+        print(P_int)
+
+        # Parcours chaque état (lignes)
         for i in range(len(self.states)):
-            # Parcours chaque colonne
+            # Parcours chaque transitions (colonnes)
             for j in range(len(self.alphabet)) :
                 # Regarde dans quel groupe de P appartient la transition actuelle
                 for k in range(len(P)):
-                    if (self.states[i].transitions.get(self.alphabet[k]) in P[k]) :
+                    if (self.states[i].transitions.get(self.alphabet[j])[0] in P_str[k]) :
                         cur_group[i].append(k)
 
 
 
         for i in range(len(cur_group)):
             print(cur_group[i])
+
+        # Division des groupes
+        P_new = []
+        for group in range(len(P)):
+            # Cas groupe indivisible car 1 seul membre
+            if (len(P[group])==1):
+                print("Can't divide")
+                P_new.append(P[group])
+            # Cas groupe à diviser
+            else :
+                # Création premier sous groupe, meilleur cas = tous les éléments dans mm sous groupe, sinon création d'autre sous groupes avec les autres états
+                temp_list = [[P[group][0]]]
+                #print(P[i][0])
+
+                # Parcours de chaque état du groupe (groupe de plus de 1 élément car sinon indivisble, comme on à déjà ajouté le premier élément on commence par le 2ème)
+                for state in range(1, len(P[group])):
+                    # Identification d'une appartenance à un sous groupe existant
+                    found = 0
+                    # Parcours de chaque sous groupe pour voir appartenance
+                    for k in range(len(temp_list)):
+                        # Comparaison entre les transition du premier élément du groupe (même transition pour chaque élément du grp) à l'état que l'on veut insérer
+                        if (cur_group[P_int[group][0]] == cur_group[P_int[group][state]]):
+                            temp_list[k].append(P[group][state])
+                            found = 1
+                    # Si aucun match trouvé pour tout les groupes, alors on créer un nouveau groupe
+                    if (found==0) :
+                        temp_list.append([P[group][state]])
+                # Ajout de chaque nouveau sous groupe dans la nouvelle partition
+                for l in range(len(temp_list)):
+                    P_new.append(temp_list[l])
+
+        # Affichage temporaire
+
+        P_int = []
+        for i in range(len(P_new)):
+            sub_group = []
+            for j in range(len(P_new[i])):
+                sub_group.append(P_new[i][j].values[0])
+            P_int.append(sub_group)
+
+        print(P_int)
+
+
+
 
 
 
