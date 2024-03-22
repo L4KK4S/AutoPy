@@ -209,8 +209,6 @@ class Automaton:
             for i in range(len(self.states)):
                 cur_group.append([])
 
-            # Boucle pour créer matrice transition
-
             # Tableau d'alias de str pour pouvoir comparer les transitions
             P_str = []
             for i in range(len(P)):
