@@ -196,6 +196,4 @@ if __name__ == "__main__":
     main.automatons.append(Automaton("Non_minimiser_cours2.txt"))
     main.automatons.append(Automaton("Non_minimiser_dm3.txt"))
     main.automaton = main.automatons[5]
-    #main.automaton.is_minimised()
-    main.automaton.minimise()
-    #main.loop()
+    main.loop()

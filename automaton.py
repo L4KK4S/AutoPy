@@ -296,8 +296,6 @@ class Automaton:
             for i in range(len(self.states)):
                 cur_group.append([])
 
-            # Boucle pour créer matrice transition
-
             # Tableau d'alias de str pour pouvoir comparer les transitions
             P_str = []
             for i in range(len(P)):
@@ -317,8 +315,6 @@ class Automaton:
                     sub_group.append(P[i][j].values[0])
                 P_int.append(sub_group)
 
-            print(P_int)
-
             # Parcours chaque état (lignes)
             for i in range(len(self.states)):
                 # Parcours chaque transitions (colonnes)
@@ -327,9 +323,6 @@ class Automaton:
                     for k in range(len(P)):
                         if (self.states[i].transitions.get(self.alphabet[j])[0] in P_str[k]) :
                             cur_group[i].append(k)
-
-            """for i in range(len(cur_group)):
-                print(cur_group[i])"""
 
             # Division des groupes
             P_new = []
@@ -368,19 +361,41 @@ class Automaton:
             P_prev = P.copy()
             P = P_new.copy()
 
-        # Création de l'automate minime
-        print()
-        new_automate = []
-        for i in range (len(P)):
-            if (P[i][0] in self.initals_states) :
-                print("Entry ", end = " ")
-            for j in range(len(self.terminal_states)):
-                if (self.terminal_states[j] in P[i]):
-                    print("Final ", end = " ")
+        # Initialisations des nouveaux éléments de l'automate
+        new_states = []
+        new_initial = []
+        new_finals = []
+        new_transitions = []
+
+        # Boucle pour initialiser chaque nouvel état
+        for i in range(len(P)):
+            new_states.append(State(self, [i]))
+            # Boucle pour initialiser chaque transitions
+            for j in range(len(self.alphabet)):
+                # Définition de la transition
+                new_states[i].transitions[self.alphabet[j]] = str(cur_group[i][j])
+                # Ajout de la transition au format str dans le tableau de transition
+                new_transitions.append(str(i)+self.alphabet[j]+str(cur_group[i][j]))
+
+            # Si terminal (tous les états d'un même groupe son terminaux) alors on initialise l'attribut is_terminal a True
+            if (P[i][0] in self.terminal_states) :
+                new_states[i].is_terminal = True
+                # Ajout de l'état à la liste d'état finaux
+                new_finals.append(P[i])
+            # Boucle pour détecter si un des éléments du groupe est initial
+            for j in range(len(self.initals_states)):
+                # Initialise l'attribut is_initial a True
+                if (self.initals_states[j] in P[i]):
+                    new_states[i].is_initial = True
+                    # Ajout de l'etat a la liste d'etat initiaux
+                    new_initial.append(P[i])
                     break
 
-            print("State : ", i, "have transition : ", cur_group[P_int[i][0]])
-
+        # Mise à jour des champs de l'automate
+        self.states = new_states.copy()
+        self.initals_states = new_initial.copy()
+        self.terminal_states = new_finals.copy()
+        self.transitions = new_transitions.copy()
 
 
 
@@ -416,6 +431,7 @@ class State():
             output += "\n" + letter + " : " + (", ".join(str(dest) for dest in destinations) if destinations else "-")
 
         return output
+
 
 # ------------------------------------------------------------------------------------------ #
 
