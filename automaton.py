@@ -360,15 +360,15 @@ class Automaton:
                             temp_list.append([P[group][state]])
                             temp_list_int.append([P_int[group][state]])
                     # Ajout de chaque nouveau sous groupe dans la nouvelle partition
-                    for l in range(len(temp_list)):
-                        P_new.append(temp_list[l])
+                    for sub_groups in range(len(temp_list)):
+                        P_new.append(temp_list[sub_groups])
 
             # Mise à jour de la partition précédente et de la nouvelle partition
 
             P_prev = P.copy()
             P = P_new.copy()
 
-         # Création de l'automate minime
+        # Création de l'automate minime
         print()
         new_automate = []
         for i in range (len(P)):
