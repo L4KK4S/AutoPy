@@ -187,7 +187,35 @@ class Main:
 
 if __name__ == "__main__":
     main = Main()
+    main.automatons.append(Automaton("complet.txt"))
     main.automatons.append(Automaton("bob_standard.txt"))
     main.automatons.append(Automaton("bob.txt"))
+    main.automatons.append(Automaton("jacky.txt"))
+
     main.automaton = main.automatons[0]
+
+    """print(main.automaton)
+    main.automaton.standardize()
+    print(main.automaton)"""
+
+
+    print(main.automaton)
+    print(main.automaton.is_determinist())
+    main.automaton.determinize()
+    print(main.automaton)
+    print(main.automaton.is_determinist())
+
+
+    """Groups = [main.automaton.terminal_states, [state for state in main.automaton.states if state not in main.automaton.terminal_states]]
+    Groups_values = [[state.get_value() for state in group] for group in Groups]
+
+    i = len(main.automaton.alphabet)
+    j = len(main.automaton.states)
+    temp_tab = [[""] * i for _ in range(j)]
+
+    print(temp_tab)
+
+    print(Groups)
+    print(Groups_values)"""
+
     main.loop()
