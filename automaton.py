@@ -163,7 +163,11 @@ class Automaton:
         for state in old_states:
             if state.is_initial:
                 for letter, destinations in state.transitions.items():
-                    new_initial_state.transitions[letter].extend(destinations)
+                    if len(destinations) !=0:
+                        for d in destinations:
+                            if d not in new_initial_state.transitions[letter]:
+                                new_initial_state.transitions[letter].append(d)
+
 
         # ajout des transition du nouvel état initial à l'automate
         for letter in self.alphabet:
@@ -189,10 +193,87 @@ class Automaton:
     # -------------------------------- Completion (Camille) ------------------------------------ #
     # ------------------------------------------------------------------------------------------ #
 
-    # ----------------------------- Determinisation (Thomas) ----------------------------------- #
+    # ----------------------------- Determinisation (Maryam) ----------------------------------- #
+    def is_determinist(self):
+        # On regarde si il y a plusieurs états initiaux
+        if len(self.initals_states) != 1:
+            return False
+        # Vérifier si chaque état a exactement une transition pour chaque symbole de l'alphabet
+        for state in self.states:
+            for letter, destinations in state.transitions.items():
+                if len(destinations) != 1:
+                    return False
+        return True
+
+    # fonction pour remplir un tableau temporaire contenant les destinations des arretes de chaque état
+    def fill_temp_tab(self):
+
+        # initialisation des variables
+        temp_tab = [[None for i in range(len(self.alphabet))] for j in range(len(self.states))]
+        index, index_max = 0, len(self.states)
+
+        # remplissage du tableau temporaire
+        while index < index_max:
+            for l in range(len(self.alphabet)):
+                temp_tab[index][l] = self.states[index].transitions[self.alphabet[l]]
+            index += 1
+        return temp_tab
+
+    # fonction pour remplir les transitions d'un nouvel état
+    def fill_transitions(self, state):
+        for v in state.values:                        # on parcourt les valeurs de l'état
+            for l in self.alphabet:                   # on parcourt les lettres de l'alphabet
+                for s in self.states:                 # on parcourt les états existants
+                    if s.values == [int(v)]:          # on vérifie si la valeur de l'état correspond à la valeur de l'état existant
+                        # on fait l'union des transitions de l'état existant et de la lettre de l'alphabet
+                        union = set(state.transitions[l]).union(set(s.transitions[l]))
+                        state.transitions[l] = sorted(list(union))
+
+
+
+    def determinize(self):
+
+        # si l'automate est déjà déterminisé, on ne fait rien
+        if self.is_determinist():
+            return self
+
+
+        # si il y a plusieurs états initiaux, on les fusionne
+        if len(self.initals_states) > 1:
+            temp_values = [str(s.values[0]) for s in self.initals_states]
+            initial_state = State(self, temp_values)
+            self.states.append(initial_state)
+            self.fill_transitions(self.states[-1])
+
+
+        # création d'un tableau temporaire contenant les destinations des arretes de chaque état
+        temp_tab = self.fill_temp_tab()
+
+        for i, state in enumerate(self.states):                                             # on parcourt les états
+            for l in range(len(self.alphabet)):                                             # on parcourt les lettres de l'alphabet
+                if ''.join(temp_tab[i][l]) not in [s.get_value() for s in self.states]:     # on vérifie si la transition n'existe pas déjà
+                    int_values = [int(x) for x in temp_tab[i][l]]                           # on convertit les valeurs en int
+                    val = int("".join(str(e) for e in int_values))                          # on convertit les valeurs
+                    self.states.append(State(self, int_values))                             # on ajoute un nouvel état avec comme valeur les valeurs de la transition vers un état pas encore existant
+                    self.fill_transitions(self.states[-1])                                  # on remplit les transitions de ce nouvel état
+                    temp_tab = self.fill_temp_tab()                                         # on met à jour le tableau temporaire
+
+        # on met à jour les entrées et sorties
+        for state in self.states:
+            for l in self.alphabet:
+                for v in state.values:
+                    for s in self.states:
+                        if s.values == [v]:
+                            if s.is_initial:
+                                state.is_initial = True
+                            if s.is_terminal:
+                                state.is_terminal = True
+
+
+
     # ------------------------------------------------------------------------------------------ #
 
-    # ------------------------------- Minimisation (Maryam) ------------------------------------ #
+    # ------------------------------- Minimisation (Thomas) ------------------------------------ #
     # -------------------------------- Completion (Camille) ------------------------------------ #
 
 
