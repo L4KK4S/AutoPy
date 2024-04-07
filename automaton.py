@@ -1,4 +1,5 @@
 import re
+from collections import Counter
 
 # --------------------------------- Class Automaton ------------------------------------ #
 
@@ -95,8 +96,10 @@ class Automaton:
 
             # transitions
             for i in range(len(self.alphabet)):
-                if s.transitions[self.alphabet[i]]:
+                if s.transitions[self.alphabet[i]] and not s.is_composed:
                     output += (",".join(map(str, s.transitions[self.alphabet[i]])).center(9) + "│")
+                elif s.is_composed:
+                    output += ("".join(s.transitions[self.alphabet[i]]).center(9) + "│")
                 else:
                     output += ("-".center(9) + "│")
 
@@ -112,6 +115,12 @@ class Automaton:
         output += ("└─────────" + "┴─────────" * (len(self.alphabet) + 1) + "┘")
 
         return output
+
+
+    # fonction pour mettre à jour les états initiaux et terminaux
+    def update_initials_terminal(self):
+        self.initals_states = [state for state in self.states if state.is_initial]
+        self.terminal_states = [state for state in self.states if state.is_terminal]
 
     # ------------------------------------------------------------------------------------------ #
 
@@ -221,15 +230,29 @@ class Automaton:
 
     # fonction pour remplir les transitions d'un nouvel état
     def fill_transitions(self, state):
+        if state.value == "13":
+            print("ok")
         for v in state.values:                        # on parcourt les valeurs de l'état
             for l in self.alphabet:                   # on parcourt les lettres de l'alphabet
                 for s in self.states:                 # on parcourt les états existants
-                    if s.values == [int(v)]:          # on vérifie si la valeur de l'état correspond à la valeur de l'état existant
-                        # on fait l'union des transitions de l'état existant et de la lettre de l'alphabet
-                        union = set(state.transitions[l]).union(set(s.transitions[l]))
-                        state.transitions[l] = sorted(list(union))
+                    if s.value == v:                  # on vérifie si la valeur de l'état correspond à la valeur de l'état existant
+
+                        union = set(state.transitions[l]).union(set(s.transitions[l]))         # on fait l'union des transitions de l'état existant et de la lettre de l'alphabet
+                        if state.is_composed:                                                  # si l'état est composé on crée un etat composé avec les valeurrs des états de base
+                            union = sorted(list(union))
+                            union = "".join(union)
+                            state.transitions[l] = [union]
+                        else:                                                                  # sinon on ajoute la transition à l'état
+                            state.transitions[l] = sorted(list(union))
 
 
+    # fonction pour vérifier si il y a des doublons dans les transitions
+    def check_doublons(self, tab):
+        for e in tab:
+            for i in tab:
+                if e in i and e != i:
+                    return True
+        return False
 
     def determinize(self):
 
@@ -242,32 +265,41 @@ class Automaton:
         if len(self.initals_states) > 1:
             temp_values = [str(s.values[0]) for s in self.initals_states]
             initial_state = State(self, temp_values)
+            initial_state.is_initial = True
+            for s in self.initals_states:
+                if s.is_initial:
+                    s.is_initial = False
             self.states.append(initial_state)
             self.fill_transitions(self.states[-1])
-
 
         # création d'un tableau temporaire contenant les destinations des arretes de chaque état
         temp_tab = self.fill_temp_tab()
 
-        for i, state in enumerate(self.states):                                             # on parcourt les états
-            for l in range(len(self.alphabet)):                                             # on parcourt les lettres de l'alphabet
-                if ''.join(temp_tab[i][l]) not in [s.get_value() for s in self.states]:     # on vérifie si la transition n'existe pas déjà
-                    int_values = [int(x) for x in temp_tab[i][l]]                           # on convertit les valeurs en int
-                    val = int("".join(str(e) for e in int_values))                          # on convertit les valeurs
-                    self.states.append(State(self, int_values))                             # on ajoute un nouvel état avec comme valeur les valeurs de la transition vers un état pas encore existant
-                    self.fill_transitions(self.states[-1])                                  # on remplit les transitions de ce nouvel état
-                    temp_tab = self.fill_temp_tab()                                         # on met à jour le tableau temporaire
+        # déterminisation de l'automate
+        for i, state in enumerate(self.states):                                                # on parcourt les états
+            for l in range(len(self.alphabet)):                                                # on parcourt les lettres de l'alphabet
+                if ''.join(temp_tab[i][l]) not in [s.get_value() for s in self.states]:        # on vérifie si la transition n'existe pas déjà
+                    if(self.check_doublons(temp_tab[i][l])):                                   # si il y a des doublons dans les transitions on quitte la boucle
+                        break
+                    int_values = [int(x) for x in temp_tab[i][l]]                              # on convertit les valeurs en int
+                    val = "".join(str(e) for e in int_values)                                  # on convertit les valeurs
+                    print(temp_tab[i][l], val)
+                    self.states[i].transitions[self.alphabet[l]] = [val]                       # on ajoute la transition à l'état
+                    self.states.append(State(self, temp_tab[i][l], True, val))                 # on ajoute un nouvel état avec comme valeur les valeurs de la transition vers un état pas encore existant
+                    self.fill_transitions(self.states[-1])                                     # on remplit les transitions de ce nouvel état
+                    temp_tab = self.fill_temp_tab()                                            # on met à jour le tableau temporaire
 
         # on met à jour les entrées et sorties
         for state in self.states:
-            for l in self.alphabet:
-                for v in state.values:
-                    for s in self.states:
-                        if s.values == [v]:
-                            if s.is_initial:
-                                state.is_initial = True
-                            if s.is_terminal:
-                                state.is_terminal = True
+            if state.is_composed:
+                for s in self.terminal_states:
+                    if s.get_value() in state.values:
+                        state.is_terminal = True
+                        break
+
+        # on met à jour les états initiaux et terminaux
+        self.update_initials_terminal()
+
 
 
 
@@ -281,9 +313,11 @@ class Automaton:
 
 class State():
 
-    def __init__(self, automaton, values):
+    def __init__(self, automaton, values, composed=False, value=None):
         self.automaton = automaton
         self.values = values
+        self.value = "".join(str(e) for e in values) if value is None else value
+        self.is_composed = composed
         self.transitions = {letter: [] for letter in automaton.alphabet}
         self.is_initial = False
         self.is_terminal = False

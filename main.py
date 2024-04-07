@@ -191,8 +191,9 @@ if __name__ == "__main__":
     main.automatons.append(Automaton("bob_standard.txt"))
     main.automatons.append(Automaton("bob.txt"))
     main.automatons.append(Automaton("jacky.txt"))
+    main.automatons.append(Automaton("test1.txt"))
 
-    main.automaton = main.automatons[0]
+    main.automaton = main.automatons[4]
 
     """print(main.automaton)
     main.automaton.standardize()
@@ -204,6 +205,12 @@ if __name__ == "__main__":
     main.automaton.determinize()
     print(main.automaton)
     print(main.automaton.is_determinist())
+
+
+    print(main.automaton.states[0].transitions)
+
+    for state in main.automaton.states:
+        print(state.get_value(), state.transitions, state.values)
 
 
     """Groups = [main.automaton.terminal_states, [state for state in main.automaton.states if state not in main.automaton.terminal_states]]
