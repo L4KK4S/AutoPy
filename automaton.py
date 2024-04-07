@@ -202,7 +202,7 @@ class Automaton:
     # -------------------------------- Completion (Camille) ------------------------------------ #
     # ------------------------------------------------------------------------------------------ #
 
-    # ----------------------------- Determinisation (Maryam) ----------------------------------- #
+    # ----------------------------- Determinisation (Abdel-Waheb) ----------------------------------- #
     def is_determinist(self):
         # On regarde si il y a plusieurs états initiaux
         if len(self.initals_states) != 1:
@@ -301,12 +301,222 @@ class Automaton:
         self.update_initials_terminal()
 
 
+    # ------------------------------------------------------------------------------------------ #
 
+
+    # ------------------------------- Minimisation (Thomas) ------------------------------------ #
+    def is_minimised(self):
+
+        # Initialisation de la partition 0
+        P_prev = []
+        P = [self.terminal_states, [state for state in self.states if state not in self.terminal_states]]
+
+        while (P_prev != P):
+
+            # Création du tableau de transitions
+            cur_group = []
+
+            # Création du tableau vide
+            for i in range(len(self.states)):
+                cur_group.append([])
+
+            # Tableau d'alias de str pour pouvoir comparer les transitions
+            P_str = []
+            for i in range(len(P)):
+                sub_group = []
+                for j in range(len(P[i])):
+                    temp = [str(v) for v in P[i][j].values]
+                    temp_str = "".join(temp)
+                    sub_group.append(temp_str)
+                P_str.append(sub_group)
+
+            # Création d'un tableau d'alias int pour pouvoir avoir une correspondance dans le tab de transition sans convertir le str
+            P_int = []
+            for i in range(len(P)):
+                sub_group = []
+                for j in range(len(P[i])):
+                    sub_group.append(P[i][j].values[0])
+                P_int.append(sub_group)
+
+            # Parcours chaque état (lignes)
+            for i in range(len(self.states)):
+                # Parcours chaque transitions (colonnes)
+                for j in range(len(self.alphabet)):
+                    # Regarde dans quel groupe de P appartient la transition actuelle
+                    for k in range(len(P)):
+                        if (self.states[i].transitions.get(self.alphabet[j])[0] in P_str[k]):
+                            cur_group[i].append(k)
+
+            # Division des groupes
+            P_new = []
+            for group in range(len(P)):
+                # Cas groupe indivisible car 1 seul membre
+                if (len(P[group]) == 1):
+                    P_new.append(P[group])
+                # Cas groupe à diviser
+                else:
+                    # Création premier sous groupe, meilleur cas = tous les éléments dans mm sous groupe, sinon création d'autre sous groupes avec les autres états
+                    temp_list = [[P[group][0]]]
+                    temp_list_int = [[P_int[group][0]]]
+
+                    # Parcours de chaque état du groupe (groupe de plus de 1 élément car sinon indivisble, comme on à déjà ajouté le premier élément on commence par le 2ème)
+                    for state in range(1, len(P[group])):
+                        # Identification d'une appartenance à un sous groupe existant
+                        found = 0
+                        # Parcours de chaque sous groupe pour voir appartenance
+                        for k in range(len(temp_list)):
+                            # Comparaison entre les transition du premier élément du groupe (même transition pour chaque élément du grp) à l'état que l'on veut insérer
+                            if (cur_group[temp_list_int[k][0]] == cur_group[P_int[group][state]]):
+                                temp_list[k].append(P[group][state])
+                                temp_list_int[k].append(P_int[group][state])
+                                found = 1
+                                break
+                        # Si aucun match trouvé pour tout les groupes, alors on créer un nouveau groupe
+                        if (found == 0):
+                            temp_list.append([P[group][state]])
+                            temp_list_int.append([P_int[group][state]])
+                    # Ajout de chaque nouveau sous groupe dans la nouvelle partition
+                    for l in range(len(temp_list)):
+                        P_new.append(temp_list[l])
+
+            # Mise à jour de la partition précédente et de la nouvelle partition
+
+            P_prev = P.copy()
+            P = P_new.copy()
+
+        # Vérification si minimiser
+        state = 0
+        for i in range(len(P)):
+            state += len(P[i])
+        if (state == len(P)) :
+            print ("Minime")
+        else :
+            print("Not minime")
+
+
+    def minimise(self):
+
+        # Initialisation de la partition 0
+        P_prev = []
+        P = [self.terminal_states, [state for state in self.states if state not in self.terminal_states]]
+
+        while (P_prev != P) :
+
+            # Création du tableau de transitions
+            cur_group = []
+
+            # Création du tableau vide
+            for i in range(len(self.states)):
+                cur_group.append([])
+
+            # Tableau d'alias de str pour pouvoir comparer les transitions
+            P_str = []
+            for i in range(len(P)):
+                sub_group = []
+                for j in range(len(P[i])):
+                    temp = [str(v) for v in P[i][j].values]
+                    temp_str = "".join(temp)
+                    sub_group.append(temp_str)
+                P_str.append(sub_group)
+
+
+            # Création d'un tableau d'alias int pour pouvoir avoir une correspondance dans le tab de transition sans convertir le str
+            P_int = []
+            for i in range(len(P)):
+                sub_group = []
+                for j in range(len(P[i])):
+                    sub_group.append(P[i][j].values[0])
+                P_int.append(sub_group)
+
+            # Parcours chaque état (lignes)
+            for i in range(len(self.states)):
+                # Parcours chaque transitions (colonnes)
+                for j in range(len(self.alphabet)) :
+                    # Regarde dans quel groupe de P appartient la transition actuelle
+                    for k in range(len(P)):
+                        if (self.states[i].transitions.get(self.alphabet[j])[0] in P_str[k]) :
+                            cur_group[i].append(k)
+
+            # Division des groupes
+            P_new = []
+            for group in range(len(P)):
+                # Cas groupe indivisible car 1 seul membre
+                if (len(P[group])==1):
+                    P_new.append(P[group])
+                # Cas groupe à diviser
+                else :
+                    # Création premier sous groupe, meilleur cas = tous les éléments dans mm sous groupe, sinon création d'autre sous groupes avec les autres états
+                    temp_list = [[P[group][0]]]
+                    temp_list_int = [[P_int[group][0]]]
+
+                    # Parcours de chaque état du groupe (groupe de plus de 1 élément car sinon indivisble, comme on à déjà ajouté le premier élément on commence par le 2ème)
+                    for state in range(1, len(P[group])):
+                        # Identification d'une appartenance à un sous groupe existant
+                        found = 0
+                        # Parcours de chaque sous groupe pour voir appartenance
+                        for k in range(len(temp_list)):
+                            # Comparaison entre les transition du premier élément du groupe (même transition pour chaque élément du grp) à l'état que l'on veut insérer
+                            if (cur_group[temp_list_int[k][0]] == cur_group[P_int[group][state]]):
+                                temp_list[k].append(P[group][state])
+                                temp_list_int[k].append(P_int[group][state])
+                                found = 1
+                                break
+                        # Si aucun match trouvé pour tout les groupes, alors on créer un nouveau groupe
+                        if (found==0) :
+                            temp_list.append([P[group][state]])
+                            temp_list_int.append([P_int[group][state]])
+                    # Ajout de chaque nouveau sous groupe dans la nouvelle partition
+                    for sub_groups in range(len(temp_list)):
+                        P_new.append(temp_list[sub_groups])
+
+            # Mise à jour de la partition précédente et de la nouvelle partition
+
+            P_prev = P.copy()
+            P = P_new.copy()
+
+        # Initialisations des nouveaux éléments de l'automate
+        new_states = []
+        new_initial = []
+        new_finals = []
+        new_transitions = []
+
+        # Boucle pour initialiser chaque nouvel état
+        for i in range(len(P)):
+            new_states.append(State(self, [i]))
+            # Boucle pour initialiser chaque transitions
+            for j in range(len(self.alphabet)):
+                # Définition de la transition
+                new_states[i].transitions[self.alphabet[j]] = str(cur_group[i][j])
+                # Ajout de la transition au format str dans le tableau de transition
+                new_transitions.append(str(i)+self.alphabet[j]+str(cur_group[i][j]))
+
+            # Si terminal (tous les états d'un même groupe son terminaux) alors on initialise l'attribut is_terminal a True
+            if (P[i][0] in self.terminal_states) :
+                new_states[i].is_terminal = True
+                # Ajout de l'état à la liste d'état finaux
+                new_finals.append(P[i])
+            # Boucle pour détecter si un des éléments du groupe est initial
+            for j in range(len(self.initals_states)):
+                # Initialise l'attribut is_initial a True
+                if (self.initals_states[j] in P[i]):
+                    new_states[i].is_initial = True
+                    # Ajout de l'etat a la liste d'etat initiaux
+                    new_initial.append(P[i])
+                    break
+
+        # Mise à jour des champs de l'automate
+        self.states = new_states.copy()
+        self.initals_states = new_initial.copy()
+        self.terminal_states = new_finals.copy()
+        self.transitions = new_transitions.copy()
 
     # ------------------------------------------------------------------------------------------ #
 
-    # ------------------------------- Minimisation (Thomas) ------------------------------------ #
-    # -------------------------------- Completion (Camille) ------------------------------------ #
+
+    # -------------------------------- Reconnaisance (Maryam) ---------------------------------- #
+
+
+    # ------------------------------------------------------------------------------------------ #
 
 
 # --------------------------------- Class State ------------------------------------ #
