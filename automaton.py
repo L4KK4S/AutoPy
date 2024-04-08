@@ -1,4 +1,5 @@
 import re
+import os
 from collections import Counter
 
 # --------------------------------- Class Automaton ------------------------------------ #
@@ -19,9 +20,25 @@ class Automaton:
 
     def initialize(self, filename):
 
+        # vérification de l'extension du fichier
+        if filename[-4:] != '.txt':
+            print("Erreur : le fichier doit être un fichier texte (.txt)")
+            return
+
+        # vérification de l'existence du fichier
+        if not os.path.exists(filename):
+            print("Erreur : le fichier n'existe pas")
+            return
+
+
         # ouverture du fichier et lecture des lignes
         with open(filename, 'r') as file:
             lines = file.readlines()
+
+            # vérification du nombre de lignes
+            if len(lines) < 5:
+                print("Erreur : le fichier doit contenir au moins 5 lignes")
+                return
 
             # initialisation de l'alphabet
             self.alphabet = [chr(97+i) for i in range(int(lines[0]))]
@@ -61,8 +78,12 @@ class Automaton:
 
 
     def __str__(self):
-        # première ligne
-        output = "┌─────────" + "┬─────────" * (len(self.alphabet) + 1) + "┐\n"
+
+        # nom du fichier de l'automate
+        output = "\n" + self.filename + "\n"
+
+        # haut de la table
+        output += "┌─────────" + "┬─────────" * (len(self.alphabet) + 1) + "┐\n"
 
         # entêtes
         headers = ["E/S", "État"] + self.alphabet
