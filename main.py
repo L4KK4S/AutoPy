@@ -12,7 +12,7 @@ class Main:
 /    \) \/ (  )( (  O )) __/ )  / 
 \_/\_/\____/ (__) \__/(__)  (__/  
                                 """
-        self.help_text = "\nBienvenue sur Autopy, un programme permettant de gérer les automates finis, voici la liste des commandes et leurs fonctions:\n\n" \
+        self.help_text = "\nBienvenue sur Autopy, un programme permettant de gérer les automates finis, voici la liste des commandes et leurs fonctionalités:\n\n" \
                          "     help: permet d'afficher l'aide\n" \
                          "     list: liste les différents automates chargés\n" \
                          "     load <fichier>.txt: charge un automate à partir d'un fichier texte\n" \
@@ -22,7 +22,13 @@ class Main:
                          "     graph: affiche un gaphe de l'automate actuellement sélectionné\n" \
                          "     standard -<option>: opérations sur la standardisation\n" \
                          "         -v: vérifie si l'automate est standard\n" \
-                         "         -s: standardise l'automate\n"
+                         "         -s: standardise l'automate\n"\
+                         "     determine -<option>: opérations sur la déterminisation\n"\
+                         "         -v: vérifie si l'automate est déterministe\n" \
+                         "         -s: détermine l'automate\n" \
+                         "     minimize -<option>: opérations sur la minimisation\n" \
+                         "         -v: vérifie si l'automate est miniminal\n" \
+                         "         -s: minimise l'automate\n"
         self.automatons = []
         self.automaton = None
 
@@ -100,8 +106,21 @@ class Main:
                     if command[1] == "-v":
                         print("L'automate est standard") if self.automaton.is_standard() else print("L'automate n'est pas standard")
                     elif command[1] == "-s":
-                        self.automaton.standardize()
-                        print("Automate standardisé avec succès")
+                        print("Automate standardisé avec succès") if self.automaton.standardize() else print("Erreur: l'automate est déjà standard")
+                    else:
+                        print("Erreur: argument invalide")
+
+            # commande determine: opérations sur la déterminisation
+            elif command[0] == "determine":
+                if len(command) != 2:
+                    print("Erreur: nombre d'arguments invalide")
+                elif self.automaton is None:
+                    print("Erreur: aucun automate n'est sélectionné")
+                else:
+                    if command[1] == "-v":
+                        print("L'automate est déterministe") if self.automaton.is_deterministic() else print("L'automate n'est pas déterministe")
+                    elif command[1] == "-s":
+                        print("Automate déterminisé avec succès") if self.automaton.determine() else print("Erreur: l'automate est déjà déterministe")
                     else:
                         print("Erreur: argument invalide")
 
@@ -194,17 +213,23 @@ if __name__ == "__main__":
     main.automatons.append(Automaton("test1.txt"))
     main.automatons.append(Automaton("to_minimize.txt"))
 
-    main.automaton = main.automatons[5]
+    main.automaton = main.automatons[0]
+    main.automaton.standardize()
+    print(main.automaton)
+    main.automaton.determine()
+    print(main.automaton)
+
+
 
     """print(main.automaton)
     main.automaton.standardize()
     print(main.automaton)"""
 
 
-    print(main.automaton)
+    """print(main.automaton)
     main.automaton.is_minimised()
     main.automaton.minimise()
-    print(main.automaton)
+    print(main.automaton)"""
 
 
     """Groups = [main.automaton.terminal_states, [state for state in main.automaton.states if state not in main.automaton.terminal_states]]
