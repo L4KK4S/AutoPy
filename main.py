@@ -237,15 +237,6 @@ if __name__ == "__main__":
         main.automatons.append(Automaton(f"automatons/B1-{i+1}.txt"))
         main.automaton = main.automatons[i]
 
-    main.automatons.append(Automaton("trash/test2.txt"))
-    main.automaton = main.automatons[-1]
 
-    """print(main.automaton)
-    print(main.automaton.is_minimised())
-    print(main.automaton.minimise())
-
-    print(main.automaton)
-    print(main.automaton.is_minimised())
-"""
 
     main.loop()
