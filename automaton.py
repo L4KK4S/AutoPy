@@ -565,6 +565,48 @@ class Automaton:
 
     # -------------------------------- Reconnaisance (Maryam) ---------------------------------- #
 
+    # fonction pour reconnaitre un mot
+    def recognize(self, word):
+
+        # vérifications: standard, déterministe, mot dans l'alphabet
+        if not self.is_standard():
+            print("Erreur : l'automate n'est pas standard")
+            return False
+
+        if not self.is_deterministic():
+            print("Erreur : l'automate n'est pas déterministe")
+            return False
+
+        for letter in word:
+            if letter not in self.alphabet:
+                print("Erreur : le mot contient des lettres qui ne sont pas dans l'alphabet")
+                return False
+
+        # initialisation de la liste des états actifs
+        active_states = self.initals_states.copy()
+
+        # parcours du mot
+        for letter in word:
+
+            # initialisation de la liste des états actifs suivants
+            next_active_states = []
+
+            # parcours des états actifs
+            for state in active_states:
+
+                # ajout des états suivants
+                next_active_states += [self.states[int(dest)] for dest in state.transitions[letter]]
+
+            # mise à jour des états actifs
+            active_states = next_active_states
+
+        # vérification si un des états actifs est terminal
+        print("Le mot est reconnu") if any(state.is_terminal for state in active_states) else "Le mot n'est pas reconnu"
+        return any(state.is_terminal for state in active_states)
+
+
+
+
 
     # ------------------------------------------------------------------------------------------ #
 
