@@ -1,6 +1,6 @@
 # AutoPy
 
-![Problème d'affichage :(](../.img/Titre.png)
+![Problème d'affichage :(](../main/.img/Titre.png)
     
 **DESCRIPTION**
 
