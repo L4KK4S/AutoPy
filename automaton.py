@@ -77,6 +77,7 @@ class Automaton:
                         state.transitions[t.group(2)].append(t.group(3))
 
 
+
     def __str__(self):
 
         # nom du fichier de l'automate
@@ -228,6 +229,7 @@ class Automaton:
     # ------------------------------------------------------------------------------------------ #
 
     # ----------------------------- Determinisation (Abdel-Waheb) ------------------------------ #
+
     def is_deterministic(self):
         # On regarde si il y a plusieurs états initiaux
         if len(self.initals_states) != 1:
@@ -253,6 +255,7 @@ class Automaton:
             index += 1
         return temp_tab
 
+    # fonction pour vérifier si il y a des doublons dans une chaine de caractères
     def check_doublons_str(self, chaine):
         chaine = ''.join(sorted(chaine))
         resultat = ''
@@ -347,6 +350,7 @@ class Automaton:
 
 
     # ------------------------------- Minimisation (Thomas) ------------------------------------ #
+
     def is_minimised(self):
 
         # Initialisation de la partition 0
@@ -442,6 +446,8 @@ class Automaton:
         P_prev = []
         P = [self.terminal_states, [state for state in self.states if state not in self.terminal_states]]
 
+
+
         while (P_prev != P) :
 
             # Création du tableau de transitions
@@ -511,6 +517,13 @@ class Automaton:
                     for sub_groups in range(len(temp_list)):
                         P_new.append(temp_list[sub_groups])
 
+            """print("\n\nPNEW : ")
+            for p in P_new:
+                print("\nGroupe : ")
+                for s in p:
+                    print(s)"""
+
+
             # Mise à jour de la partition précédente et de la nouvelle partition
 
             P_prev = P.copy()
@@ -522,34 +535,41 @@ class Automaton:
         new_finals = []
         new_transitions = []
 
-        # Boucle pour initialiser chaque nouvel état
-        for i in range(len(P)):
-            new_states.append(State(self, [i]))
-            # Boucle pour initialiser chaque transitions
-            for j in range(len(self.alphabet)):
-                # Définition de la transition
-                new_states[i].transitions[self.alphabet[j]] = str(cur_group[i][j])
-                # Ajout de la transition au format str dans le tableau de transition
-                new_transitions.append(str(i)+self.alphabet[j]+str(cur_group[i][j]))
+        # Création des nouveaux étatsenumerate
+        for index, group in enumerate(P):
 
-            # Si terminal (tous les états d'un même groupe son terminaux) alors on initialise l'attribut is_terminal a True
-            if (P[i][0] in self.terminal_states) :
-                new_states[i].is_terminal = True
-                # Ajout de l'état à la liste d'état finaux
-                new_finals.append(P[i])
-            # Boucle pour détecter si un des éléments du groupe est initial
-            for j in range(len(self.initals_states)):
-                # Initialise l'attribut is_initial a True
-                if (self.initals_states[j] in P[i]):
-                    new_states[i].is_initial = True
-                    # Ajout de l'etat a la liste d'etat initiaux
-                    new_initial.append(P[i])
-                    break
+            # on crée un nouvel état
+            new_state = State(self, [index])
+
+            # on parcourt les transitions du nouvel état pour les remplir
+            for l in self.alphabet:
+
+                # on parcourt les états des groupes
+                for index2, group2 in enumerate(P):
+                    for state2 in group2:
+
+                        # si l'état correspond on ajoute la transition
+                        if group[0].transitions[l] == [str(state2.get_value())]:
+                            new_state.transitions[l] = [index2]
+
+            for state in group:
+                if state.is_initial:
+                    new_state.is_initial = True
+                if state.is_terminal:
+                    new_state.is_terminal = True
+
+            # on ajoute le nouvel état à la liste des nouveaux états
+            new_states.append(new_state)
+            self.update_initials_terminal()
+
+        # Création des nouvelles transitions
+        for state in new_states:
+            for l in self.alphabet:
+                new_transitions.append(str(state.get_value()) + l + str(state.transitions[l][0]))
+
 
         # Mise à jour des champs de l'automate
         self.states = new_states.copy()
-        self.initals_states = new_initial.copy()
-        self.terminal_states = new_finals.copy()
         self.transitions = new_transitions.copy()
 
     # ------------------------------------------------------------------------------------------ #
