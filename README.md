@@ -1,6 +1,6 @@
 # AutoPy
 
-![Problème d'affichage :(](../main/.img/Titre.png)
+![Problème d'affichage :(](../main/img/Titre.png)
     
 **DESCRIPTION**
 
@@ -19,7 +19,7 @@ Ce projet à été réalisé dans le cadre du module SM402 - Automates finis et 
 **COMMENT CA MARCHE?**
 
 Vous pouvez utiliser toutes ces commandes:
-![Problème d'affichage :(](../main/.img/Commandes.png)
+![Problème d'affichage :(](../main/img/Commandes.png)
 Si vous voulez les revoir utilisez ``help``
 
 **Conçu par incluant**
