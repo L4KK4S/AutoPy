@@ -233,9 +233,11 @@ class Main:
 if __name__ == "__main__":
     main = Main()
 
-    for i in range(10):
-        main.automatons.append(Automaton(f"automatons/B1-{i+1}.txt"))
-        main.automaton = main.automatons[i]
+    for i in range(44):
+        if (i+1) not in [31, 32, 33, 34, 35]:
+            main.automatons.append(Automaton(f"automatons/B1-{i+1}.txt"))
+            main.automaton = main.automatons[-1]
+            print(main.automaton)
 
 
 
