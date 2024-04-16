@@ -28,6 +28,8 @@ class Main:
                          "          save <fichier>.txt:              enregistre l'automate actuellement sélectionné dans un fichier texte\n" \
                          "          read <mot>:                      regarde si l'automate reconnait un mot\n\n" \
                          "     Commandes avancées pour l'automate:\n"\
+                         "          complete:                        complète l'automate\n" \
+                         "          complement:                      complémente l'automate\n" \
                          "          standard -<option>:              opérations sur la standardisation\n" \
                          "              -v:                          vérifie si l'automate est standard\n" \
                          "              -a:                          standardise l'automate\n"\
@@ -128,6 +130,20 @@ class Main:
                     print("Erreur: aucun automate n'est sélectionné")
                 else:
                     self.automaton.recognize(command[1])
+
+            # commande complete: complète l'automate
+            elif command[0] == "complete":
+                if self.automaton is None:
+                    print("Erreur: aucun automate n'est sélectionné")
+                else:
+                    print("Automate complété avec succès") if self.automaton.complete() else print("Erreur: l'automate est déjà complet")
+
+            # commande complement: complémente l'automate
+            elif command[0] == "complement":
+                if self.automaton is None:
+                    print("Erreur: aucun automate n'est sélectionné")
+                else:
+                    print("Automate complémenté avec succès") if self.automaton.completary() else print("Erreur: l'automate est déjà complémenté")
 
             # commande standard: opérations sur la standardisation
             elif command[0] == "standard":
@@ -262,9 +278,18 @@ if __name__ == "__main__":
             main.automaton = main.automatons[-1]
             #print(main.automaton)
 
-    """ main.automaton = main.automatons[35]
-    print(main.automaton)
-    main.automaton.recognize("aaaaa")
-    """
+    """inte = 4
+    main.automatons[inte].complete()
+    print(main.automatons[inte])
+    main.automatons[inte].determine()
+    print(main.automatons[inte])"""
+
+    for i in range(39):
+        if (i+1) not in [31, 32, 33, 34, 35]:
+            main.automatons[i].complete()
+            print(main.automatons[i])
+            main.automatons[i].determine()
+            print(main.automatons[i])
+
 
     main.loop()
