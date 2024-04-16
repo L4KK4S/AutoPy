@@ -278,18 +278,6 @@ if __name__ == "__main__":
             main.automaton = main.automatons[-1]
             #print(main.automaton)
 
-    """inte = 4
-    main.automatons[inte].complete()
-    print(main.automatons[inte])
-    main.automatons[inte].determine()
-    print(main.automatons[inte])"""
-
-    for i in range(39):
-        if (i+1) not in [31, 32, 33, 34, 35]:
-            main.automatons[i].complete()
-            print(main.automatons[i])
-            main.automatons[i].determine()
-            print(main.automatons[i])
 
 
     main.loop()

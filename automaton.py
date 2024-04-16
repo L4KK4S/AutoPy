@@ -215,7 +215,7 @@ class Automaton:
 
 
         # trier les états par valeur croissante
-        self.states.sort(key=lambda x: x.values[0])
+        self.states.sort(key=lambda x: x.value)
 
 
         return True
