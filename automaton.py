@@ -329,6 +329,9 @@ class Automaton:
         if self.is_deterministic():
             return False
 
+        # si l'automate n'est pas complet, on le complète
+        if not self.is_complete():
+            self.complete()
 
         # si il y a plusieurs états initiaux, on les fusionne
         if len(self.initals_states) > 1:
