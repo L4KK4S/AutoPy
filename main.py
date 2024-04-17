@@ -1,6 +1,5 @@
 from automaton import Automaton
 import os
-import graph
 
 class Main:
 
@@ -24,7 +23,6 @@ class Main:
                          "          select <numéro>:                 sélectionne un automate parmi la liste des automates enregistrés\n" \
                          "          current:                         affiche l'automate actuellement sélectionné\n" \
                          "          show:                            affiche le tableau des transitions de l'automate actuellement sélectionné\n" \
-                         "          graph:                           affiche un gaphe de l'automate actuellement sélectionné\n" \
                          "          save <fichier>.txt:              enregistre l'automate actuellement sélectionné dans un fichier texte\n" \
                          "          read <mot>:                      regarde si l'automate reconnait un mot\n\n" \
                          "     Commandes avancées pour l'automate:\n"\
@@ -106,13 +104,6 @@ class Main:
                     print("Aucun automate n'est sélectionné")
                 else:
                     print(self.automaton)
-
-            # commande graph: affiche le graphe de l'automate actuellement sélectionné
-            elif command[0] == "graph":
-                if self.automaton is None:
-                    print("Erreur: aucun automate n'est sélectionné")
-                else:
-                    graph.graph(self.automaton)
 
             # commande clear: efface la console
             elif command[0] == "clear":
