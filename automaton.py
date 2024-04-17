@@ -628,23 +628,21 @@ class Automaton:
         # initialisation de la liste des états actifs
         active_states = self.initals_states.copy()
 
-        # parcours du mot
+        # parcours des lettres du mot
         for letter in word:
-
-            # initialisation de la liste des états actifs suivants
-            next_active_states = []
+            # initialisation de la liste des états actifs temporaire
+            temp_active_states = []
 
             # parcours des états actifs
             for state in active_states:
+                # ajout des états de destination à la liste des états actifs temporaire
+                temp_active_states += [s for s in self.states if s.get_value() in state.transitions[letter]]
 
-                # ajout des états suivants
-                next_active_states += [self.states[int(dest)] for dest in state.transitions[letter]]
-
-            # mise à jour des états actifs
-            active_states = next_active_states
+            # mise à jour de la liste des états actifs
+            active_states = temp_active_states.copy()
 
         # vérification si un des états actifs est terminal
-        print("Le mot est reconnu") if any(state.is_terminal for state in active_states) else "Le mot n'est pas reconnu"
+        print("Le mot est reconnu") if any(state.is_terminal for state in active_states) else print("Le mot n'est pas reconnu")
         return any(state.is_terminal for state in active_states)
 
     # méthode pour donner le complémentaire de l'automate

@@ -134,7 +134,7 @@ class Main:
                 if self.automaton is None:
                     print("Erreur: aucun automate n'est sélectionné")
                 else:
-                    print("Automate complémenté avec succès") if self.automaton.completary() else print("Erreur: l'automate est déjà complémenté")
+                    self.automaton.completary()
 
             # commande standard: opérations sur la standardisation
             elif command[0] == "standard":
@@ -156,6 +156,8 @@ class Main:
                     print("Erreur: nombre d'arguments invalide")
                 elif self.automaton is None:
                     print("Erreur: aucun automate n'est sélectionné")
+                elif not self.automaton.is_complete():
+                    print("Erreur: completez l'automate avant de le determiniser")
                 else:
                     if command[1] == "-v":
                         print("L'automate est déterministe") if self.automaton.is_deterministic() else print("L'automate n'est pas déterministe")
@@ -269,6 +271,11 @@ if __name__ == "__main__":
             main.automaton = main.automatons[-1]
             #print(main.automaton)
 
-
+    main.automaton = main.automatons[11]
+    print(main.automaton)
+    main.automaton.complete()
+    main.automaton.standardize()
+    main.automaton.determine()
+    print(main.automaton)
 
     main.loop()
