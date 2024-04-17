@@ -46,7 +46,7 @@ class Automaton:
             # initialisation des états
             for line in lines:
                 if "-2" in line:
-                    self.states = [State(self, [i]) for i in range(int(lines[1]) - 1)]
+                    self.states = [State(self, [str(i)]) for i in range(int(lines[1]) - 1)]
                     self.states.append(State(self, [-2]))
                     self.states.sort(key=lambda x: x.values[0])
                 else:
@@ -400,9 +400,17 @@ class Automaton:
     # méthode pour vérifier si l'automate est minimisé
     def is_minimised(self):
 
+        # Si l'automate à 1 seul état ou moins, alors il est minimisé
+        if len(self.states) <= 1:
+            return True
+
         # Initialisation de la partition 0
         P_prev = []
         P = [self.terminal_states, [state for state in self.states if state not in self.terminal_states]]
+
+        # Si un des groupes est vide, alors l'automate est minimisé
+        if P[0] == [] or P[1] == []:
+            return True
 
         # Création du tableau de transitions
         cur_group = []
@@ -457,7 +465,16 @@ class Automaton:
                     # Parcours de chaque sous groupe pour voir appartenance
                     for k in range(len(temp_list)):
                         # Comparaison entre les transition du premier élément du groupe (même transition pour chaque élément du grp) à l'état que l'on veut insérer
-                        if (cur_group[temp_list_int[k][0]] == cur_group[P_int[group][state]]):
+
+                        # si l'état contient un P, on récupère l'index de l'état dans la liste des états
+                        if 'P' in str(P_int[group][state]):
+                            temp = [s.get_value() for s in self.states]
+                            p_index = temp.index(P_int[group][state])
+                            to_compare = p_index
+                        else:
+                            to_compare = cur_group[int(P_int[group][state])]
+
+                        if (cur_group[int(temp_list_int[k][0])] == to_compare):
                             temp_list[k].append(P[group][state])
                             temp_list_int[k].append(P_int[group][state])
                             found = 1
@@ -470,9 +487,9 @@ class Automaton:
                 for l in range(len(temp_list)):
                     P_new.append(temp_list[l])
 
-
         # Mise à jour de la partition précédente et de la nouvelle partition
         return P == P_new
+
 
     # méthode pour minimiser l'automate
     def minimise(self):
@@ -540,7 +557,16 @@ class Automaton:
                         # Parcours de chaque sous groupe pour voir appartenance
                         for k in range(len(temp_list)):
                             # Comparaison entre les transition du premier élément du groupe (même transition pour chaque élément du grp) à l'état que l'on veut insérer
-                            if (cur_group[temp_list_int[k][0]] == cur_group[P_int[group][state]]):
+
+                            # si l'état contient un P, on récupère l'index de l'état dans la liste des états
+                            if 'P' in str(P_int[group][state]):
+                                temp = [s.get_value() for s in self.states]
+                                p_index = temp.index(P_int[group][state])
+                                to_compare = p_index
+                            else:
+                                to_compare = cur_group[int(P_int[group][state])]
+
+                            if (cur_group[int(temp_list_int[k][0])] == to_compare):
                                 temp_list[k].append(P[group][state])
                                 temp_list_int[k].append(P_int[group][state])
                                 found = 1

@@ -17,13 +17,13 @@ class Main:
                          "          clear:                           efface la console\n" \
                          "          quit:                            quitte le programme\n\n" \
                          "     Commandes de bases pour l'automate:\n" \
+                         "          test:                            effectue une série de tests sur l'automate actuellement sélectionné\n" \
                          "          load <fichier>.txt <option>:     charge un automate à partir d'un fichier texte\n" \
                          "              -c:                          sélectionne l'automate chargé\n" \
                          "          list <option>:                   liste les différents automates chargés\n" \
                          "          select <numéro>:                 sélectionne un automate parmi la liste des automates enregistrés\n" \
                          "          current:                         affiche l'automate actuellement sélectionné\n" \
                          "          show:                            affiche le tableau des transitions de l'automate actuellement sélectionné\n" \
-                         "          save <fichier>.txt:              enregistre l'automate actuellement sélectionné dans un fichier texte\n" \
                          "          read <mot>:                      regarde si l'automate reconnait un mot\n\n" \
                          "     Commandes avancées pour l'automate:\n"\
                          "          complete:                        complète l'automate\n" \
@@ -59,6 +59,13 @@ class Main:
             # commande list: affiche la liste des automates enregistrés
             elif command[0] == "list":
                 self.display_automaton()
+
+            # commande test: effectue une série de tests sur l'automate actuellement sélectionné
+            elif command[0] == "test":
+                if self.automaton is None:
+                    print("Erreur: aucun automate n'est sélectionné")
+                else:
+                    self.test()
 
             # commande load: charge un automate à partir d'un fichier texte
             elif command[0] == "load":
@@ -158,8 +165,6 @@ class Main:
                     print("Erreur: nombre d'arguments invalide")
                 elif self.automaton is None:
                     print("Erreur: aucun automate n'est sélectionné")
-                elif not self.automaton.is_complete():
-                    print("Erreur: completez l'automate avant de le determiniser")
                 else:
                     if command[1] == "-v":
                         print("L'automate est déterministe") if self.automaton.is_deterministic() else print("L'automate n'est pas déterministe")
@@ -181,21 +186,6 @@ class Main:
                         print("Automate minimisé avec succès") if self.automaton.minimise() else print("Erreur: l'automate est déjà minimal")
                     else:
                         print("Erreur: argument invalide")
-
-            # commande save: enregistre l'automate actuellement sélectionné dans un fichier texte
-            elif command[0] == "save":
-                if len(command) != 2:
-                    print("Erreur: nombre d'arguments invalide")
-                elif self.automaton is None:
-                    print("Erreur: aucun automate n'est sélectionné")
-                elif not command[1].endswith('.txt'):
-                    print("Erreur: ce n'est pas un fichier texte")
-                elif os.path.exists(command[1]):
-                    print("Erreur: le fichier spécifié existe déjà")
-                else:
-                    self.save_automaton(command[1])
-                    print(f"Automate enregistré avec succès dans le fichier {command[1]}")
-
 
 
             # commande clear: efface la console
@@ -235,34 +225,30 @@ class Main:
 
         return is_input_valid
 
-    def save_automaton(self, filename):
 
-            with open(filename, "w") as file:
+    def test(self):
 
-                # taille alphabet et états
-                file.write(str(len(self.automaton.alphabet)) + "\n")
-                file.write(str(len(self.automaton.states)) + "\n")
+        # affichage de l'automate
+        print(self.automaton)
 
-                # etats initiaux
-                file.write(str(len(self.automaton.initals_states)) + " ")
-                for state in self.automaton.initals_states:
-                    file.write(state.get_value() + " ")
-                file.write("\n")
+        # standardisation
+        input_text = ""
+        while input_text != "o" and input_text != "n":
+            input_text = input("Voulez-vous standardiser l'automate ? (o/n) : ")
 
-                # etats terminaux
-                file.write(str(len(self.automaton.terminal_states)) + " ")
-                for state in self.automaton.terminal_states:
-                    file.write(state.get_value() + " ")
-                file.write("\n")
+        if input_text == "o":
+            self.automaton.standardize()
+            print(self.automaton)
 
-                # nombres de transitions
-                file.write(str(len(self.automaton.transitions)) + "\n")
+        # déterminisation
+        self.automaton.determine()
+        print("Automate déterminisé")
+        print(self.automaton)
 
-                # transitions
-                for transition in self.automaton.transitions:
-                    file.write(transition)
-                    file.write("\n")
-
+        # minimisation
+        self.automaton.minimise()
+        print("Automate minimisé")
+        print(self.automaton)
 
 if __name__ == "__main__":
     main = Main()
@@ -271,13 +257,7 @@ if __name__ == "__main__":
         if (i+1) not in [31, 32, 33, 34, 35]:
             main.automatons.append(Automaton(f"automatons/B1-{i+1}.txt"))
             main.automaton = main.automatons[-1]
-            #print(main.automaton)
 
-    main.automaton = main.automatons[11]
-    print(main.automaton)
-    main.automaton.complete()
-    main.automaton.standardize()
-    main.automaton.determine()
-    print(main.automaton)
+
 
     main.loop()
