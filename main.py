@@ -126,8 +126,6 @@ class Main:
                     print("Erreur: nombre d'arguments invalide")
                 elif self.automaton is None:
                     print("Erreur: aucun automate n'est sélectionné")
-                elif not self.automaton.determine():
-                    print("Erreur: déterminez l'automate avant de lire un mot")
                 else:
                     self.automaton.recognize(command[1])
 

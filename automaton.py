@@ -169,10 +169,10 @@ class Automaton:
         # stockage des anciens états
         old_states = self.states.copy()
 
-        # ajout de l'état initial I qui aura pour valeur -2
+        # ajout de l'état initial I qui aura pour valeur I
         new_initial_state = State(self, ["I"])
 
-        # mettre la valeur is_initial de I initial à False
+        # mettre la valeur is_initial de I initial à True
         new_initial_state.is_initial = True
 
         # mettre la valeur is_terminal de I initial à True si un des états initiaux de l'automate est terminal
