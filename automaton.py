@@ -50,7 +50,7 @@ class Automaton:
                     self.states.append(State(self, [-2]))
                     self.states.sort(key=lambda x: x.values[0])
                 else:
-                    self.states = [State(self, [i]) for i in range(int(lines[1]))]
+                    self.states = [State(self, [str(i)]) for i in range(int(lines[1]))]
 
             # initialisation des états initiaux et terminaux
             self.initals_states = [int(x) for x in lines[2].split()[1:]]
@@ -467,14 +467,21 @@ class Automaton:
                         # Comparaison entre les transition du premier élément du groupe (même transition pour chaque élément du grp) à l'état que l'on veut insérer
 
                         # si l'état contient un P, on récupère l'index de l'état dans la liste des états
-                        if 'P' in str(P_int[group][state]):
+                        if 'P' or 'I' in str(P_int[group][state]):
                             temp = [s.get_value() for s in self.states]
                             p_index = temp.index(P_int[group][state])
                             to_compare = p_index
                         else:
                             to_compare = cur_group[int(P_int[group][state])]
 
-                        if (cur_group[int(temp_list_int[k][0])] == to_compare):
+                        if 'P' or 'I' in temp_list_int[k][0]:
+                            temp = [s.get_value() for s in self.states]
+                            p_index = temp.index(P_int[group][state])
+                            to_compare2 = cur_group[p_index]
+                        else:
+                            to_compare2 = cur_group[int(temp_list_int[k][0])]
+
+                        if to_compare2 == to_compare:
                             temp_list[k].append(P[group][state])
                             temp_list_int[k].append(P_int[group][state])
                             found = 1
@@ -559,14 +566,21 @@ class Automaton:
                             # Comparaison entre les transition du premier élément du groupe (même transition pour chaque élément du grp) à l'état que l'on veut insérer
 
                             # si l'état contient un P, on récupère l'index de l'état dans la liste des états
-                            if 'P' in str(P_int[group][state]):
+                            if 'P' or 'I' in str(P_int[group][state]):
                                 temp = [s.get_value() for s in self.states]
                                 p_index = temp.index(P_int[group][state])
                                 to_compare = p_index
                             else:
                                 to_compare = cur_group[int(P_int[group][state])]
 
-                            if (cur_group[int(temp_list_int[k][0])] == to_compare):
+                            if 'P' or 'I' in temp_list_int[k][0]:
+                                temp = [s.get_value() for s in self.states]
+                                p_index = temp.index(P_int[group][state])
+                                to_compare2 = cur_group[p_index]
+                            else:
+                                to_compare2 = cur_group[int(temp_list_int[k][0])]
+
+                            if to_compare2 == to_compare:
                                 temp_list[k].append(P[group][state])
                                 temp_list_int[k].append(P_int[group][state])
                                 found = 1
@@ -595,7 +609,7 @@ class Automaton:
         for index, group in enumerate(P):
 
             # on crée un nouvel état
-            new_state = State(self, [index])
+            new_state = State(self, str(index))
 
             # on parcourt les transitions du nouvel état pour les remplir
             for l in self.alphabet:
