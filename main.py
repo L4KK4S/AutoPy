@@ -13,6 +13,7 @@ class Main:
                                 """
         self.help_text = "\nBienvenue sur Autopy, un programme permettant de gérer les automates finis, voici la liste des commandes et leurs fonctionalités:\n\n" \
                          "     Commandes sytème:\n" \
+                         "     Commandes sytème:\n" \
                          "          help:                            permet d'afficher l'aide\n" \
                          "          clear:                           efface la console\n" \
                          "          quit:                            quitte le programme\n\n" \

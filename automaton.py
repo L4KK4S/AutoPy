@@ -404,6 +404,14 @@ class Automaton:
         if len(self.states) <= 1:
             return True
 
+        # si l'automate n'est pas complet, on le complète
+        if not self.is_complete():
+            self.complete()
+
+        # si l'automate n'est pas déterministe, on le déterminise
+        if not self.is_deterministic():
+            self.determine()
+
         # Initialisation de la partition 0
         P_prev = []
         P = [self.terminal_states, [state for state in self.states if state not in self.terminal_states]]
@@ -654,11 +662,7 @@ class Automaton:
     # méthode pour reconnaitre un mot
     def recognize(self, word):
 
-        # vérifications: standard, déterministe, mot dans l'alphabet
-        if not self.is_standard():
-            print("Erreur : l'automate n'est pas standard")
-            return False
-
+        # vérifications: déterministe, mot dans l'alphabet
         if not self.is_deterministic():
             print("Erreur : l'automate n'est pas déterministe")
             return False
