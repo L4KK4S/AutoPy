@@ -257,7 +257,7 @@ if __name__ == "__main__":
             main.automaton = main.automatons[-1]
 
 
-    main.automaton = main.automatons[5]
+    main.automaton = main.automatons[26]
     main.test()
 
     main.loop()
