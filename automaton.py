@@ -475,14 +475,14 @@ class Automaton:
                         # Comparaison entre les transition du premier élément du groupe (même transition pour chaque élément du grp) à l'état que l'on veut insérer
 
                         # si l'état contient un P, on récupère l'index de l'état dans la liste des états
-                        if 'P' or 'I' in str(P_int[group][state]):
+                        if 'P' in str(P_int[group][state]) or 'I' in str(P_int[group][state]):
                             temp = [s.get_value() for s in self.states]
                             p_index = temp.index(P_int[group][state])
-                            to_compare = p_index
+                            to_compare = cur_group[p_index]
                         else:
                             to_compare = cur_group[int(P_int[group][state])]
 
-                        if 'P' or 'I' in temp_list_int[k][0]:
+                        if 'P' in temp_list_int[k][0] or 'I' in temp_list_int[k][0]:
                             temp = [s.get_value() for s in self.states]
                             p_index = temp.index(P_int[group][state])
                             to_compare2 = cur_group[p_index]
@@ -574,14 +574,14 @@ class Automaton:
                             # Comparaison entre les transition du premier élément du groupe (même transition pour chaque élément du grp) à l'état que l'on veut insérer
 
                             # si l'état contient un P, on récupère l'index de l'état dans la liste des états
-                            if 'P' or 'I' in str(P_int[group][state]):
+                            if 'P' in str(P_int[group][state]) or 'I' in str(P_int[group][state]):
                                 temp = [s.get_value() for s in self.states]
                                 p_index = temp.index(P_int[group][state])
-                                to_compare = p_index
+                                to_compare = cur_group[p_index]
                             else:
                                 to_compare = cur_group[int(P_int[group][state])]
 
-                            if 'P' or 'I' in temp_list_int[k][0]:
+                            if 'P' in temp_list_int[k][0] or 'I' in temp_list_int[k][0]:
                                 temp = [s.get_value() for s in self.states]
                                 p_index = temp.index(P_int[group][state])
                                 to_compare2 = cur_group[p_index]
