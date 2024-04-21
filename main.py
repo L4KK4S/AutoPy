@@ -26,9 +26,11 @@ class Main:
                          "          current:                         affiche l'automate actuellement sélectionné\n" \
                          "          show:                            affiche le tableau des transitions de l'automate actuellement sélectionné\n" \
                          "          read <mot>:                      regarde si l'automate reconnait un mot\n\n" \
-                         "     Commandes avancées pour l'automate:\n"\
-                         "          complete:                        complète l'automate\n" \
+                         "     Commandes avancées pour l'automate:\n" \
                          "          complement:                      complémente l'automate\n" \
+                         "          complete:                        complète l'automate\n" \
+                         "              -v:                          vérifie si l'automate est complet\n" \
+                         "              -a:                          complète l'automate\n" \
                          "          standard -<option>:              opérations sur la standardisation\n" \
                          "              -v:                          vérifie si l'automate est standard\n" \
                          "              -a:                          standardise l'automate\n"\
@@ -132,10 +134,18 @@ class Main:
 
             # commande complete: complète l'automate
             elif command[0] == "complete":
-                if self.automaton is None:
+                if len(command) != 2:
+                    print("Erreur: nombre d'arguments invalide")
+                elif self.automaton is None:
                     print("Erreur: aucun automate n'est sélectionné")
                 else:
-                    print("Automate complété avec succès") if self.automaton.complete() else print("Erreur: l'automate est déjà complet")
+                    if command[1] == "-v":
+                        if self.automaton.is_complete(debug=True):
+                            print("L'automate est complet")
+                    elif command[1] == "-a":
+                        print("Automate complété avec succès") if self.automaton.complete() else print("Erreur: l'automate est déjà complet")
+                    else:
+                        print("Erreur: argument invalide")
 
             # commande complement: complémente l'automate
             elif command[0] == "complement":
@@ -167,7 +177,8 @@ class Main:
                     print("Erreur: aucun automate n'est sélectionné")
                 else:
                     if command[1] == "-v":
-                        print("L'automate est déterministe") if self.automaton.is_deterministic() else print("L'automate n'est pas déterministe")
+                        if self.automaton.is_deterministic(debug=True):
+                            print("L'automate est déterministe")
                     elif command[1] == "-a":
                         print("Automate déterminisé avec succès") if self.automaton.determine() else print("Erreur: l'automate est déjà déterministe")
                     else:
@@ -242,12 +253,12 @@ class Main:
 
         # déterminisation
         self.automaton.determine()
-        print("Automate déterminisé")
+        print("\nAutomate déterminisé", end="")
         print(self.automaton)
 
         # minimisation
         self.automaton.minimise()
-        print("Automate minimisé")
+        print("\nAutomate minimisé", end="")
         print(self.automaton)
 
 if __name__ == "__main__":
@@ -258,8 +269,6 @@ if __name__ == "__main__":
             main.automatons.append(Automaton(f"automatons/B1-{i+1}.txt"))
             main.automaton = main.automatons[-1]
 
-    main.automaton = main.automatons[15]
-    main.automaton.determine()
 
 
 
