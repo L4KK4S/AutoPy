@@ -143,6 +143,7 @@ class Main:
                     print("Erreur: aucun automate n'est sélectionné")
                 else:
                     self.automaton.completary()
+                    print("Automate complémenté avec succès")
 
             # commande standard: opérations sur la standardisation
             elif command[0] == "standard":
@@ -256,6 +257,9 @@ if __name__ == "__main__":
         if (i+1) not in [31, 32, 33, 34, 35]:
             main.automatons.append(Automaton(f"automatons/B1-{i+1}.txt"))
             main.automaton = main.automatons[-1]
+
+    main.automaton = main.automatons[15]
+    main.automaton.determine()
 
 
 
