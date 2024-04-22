@@ -139,7 +139,7 @@ class Main:
                     print("Erreur: aucun automate n'est sélectionné")
                 else:
                     if command[1] == "-v":
-                        if self.automaton.is_complete(debug=True):
+                        if self.automaton.is_complete():
                             print("L'automate est complet")
                     elif command[1] == "-a":
                         print("Automate complété avec succès") if self.automaton.complete() else print("Erreur: l'automate est déjà complet")
@@ -176,7 +176,7 @@ class Main:
                     print("Erreur: aucun automate n'est sélectionné")
                 else:
                     if command[1] == "-v":
-                        if self.automaton.is_deterministic(debug=True):
+                        if self.automaton.is_deterministic():
                             print("L'automate est déterministe")
                     elif command[1] == "-a":
                         print("Automate déterminisé avec succès") if self.automaton.determine() else print("Erreur: l'automate est déjà déterministe")
