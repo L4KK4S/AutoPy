@@ -1,4 +1,4 @@
-from automaton import Automaton
+from B1_automaton import Automaton
 import os
 
 class Main:
@@ -12,7 +12,6 @@ class Main:
 \_/\_/\____/ (__) \__/(__)  (__/  
                                 """
         self.help_text = "\nBienvenue sur Autopy, un programme permettant de gérer les automates finis, voici la liste des commandes et leurs fonctionalités:\n\n" \
-                         "     Commandes sytème:\n" \
                          "     Commandes sytème:\n" \
                          "          help:                            permet d'afficher l'aide\n" \
                          "          clear:                           efface la console\n" \
@@ -262,11 +261,12 @@ class Main:
         print(self.automaton)
 
 if __name__ == "__main__":
+
     main = Main()
 
     for i in range(44):
         if (i+1) not in [31, 32, 33, 34, 35]:
-            main.automatons.append(Automaton(f"automatons/B1-{i+1}.txt"))
+            main.automatons.append(Automaton(f"B1_automatons/B1-{i+1}.txt"))
             main.automaton = main.automatons[-1]
 
 

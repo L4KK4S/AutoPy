@@ -117,7 +117,7 @@ class Automaton:
             for i, letter in enumerate(self.alphabet):
                 if s.transitions[self.alphabet[i]] and not s.is_composed:
                     output += (",".join(map(str, s.transitions[self.alphabet[i]])).center(9) + "│")
-                elif s.is_composed and s.transitions[self.alphabet[i]] != []:
+                elif s.is_composed:
                     output += ("".join(s.transitions[self.alphabet[i]]).center(9) + "│")
                 else:
                     output += ("-".center(9) + "│")
@@ -225,14 +225,12 @@ class Automaton:
     # -------------------------------- Completion (Camille) ------------------------------------ #
 
     # méthode pour vérifier si l'automate est complet
-    def is_complete(self, debug=False):
+    def is_complete(self):
 
         # vérification que chaque état a une transition pour chaque symbole de l'alphabet
         for state in self.states:
             for symbol in self.alphabet:
                 if state.transitions[symbol] == []:
-                    if debug:
-                        print("Erreur : l'automate n'est pas complet car l'état " + state.get_value() + " n'a pas de transition pour le symbole " + symbol)
                     return False
         return True
 
@@ -262,18 +260,14 @@ class Automaton:
     # ----------------------------- Determinisation (Abdel-Waheb) ------------------------------ #
 
     # méthode pour vérifier si l'automate est déterministe
-    def is_deterministic(self, debug=False):
+    def is_deterministic(self):
         # On regarde si il y a plusieurs états initiaux
         if len(self.initals_states) != 1:
-            if debug:
-                print("Erreur : l'automate n'est pas déterministe car il y a plusieurs états initiaux")
             return False
         # Vérifier si chaque état a exactement une transition pour chaque symbole de l'alphabet
         for state in self.states:
             for letter, destinations in state.transitions.items():
                 if len(destinations) != 1:
-                    if debug:
-                        print("Erreur : l'automate n'est pas déterministe car l'état " + state.get_value() + " a plusieurs transitions pour la lettre " + letter)
                     return False
         return True
 
@@ -331,12 +325,13 @@ class Automaton:
     # méthode pour déterminiser l'automate
     def determine(self):
 
-
         # si l'automate est déjà déterminisé, on ne fait rien
         if self.is_deterministic():
             return False
 
-        new_states = []  # initialisation de la liste des nouveaux états
+        # si l'automate n'est pas complet, on le complète
+        if not self.is_complete():
+            self.complete()
 
         # si il y a plusieurs états initiaux, on les fusionne
         if len(self.initals_states) > 1:
@@ -347,14 +342,8 @@ class Automaton:
                 if s.is_initial:
                     s.is_initial = False
             self.states.append(initial_state)
-            new_states.append(initial_state)
             self.fill_transitions(self.states[-1])
-            self.fill_transitions(new_states[-1])
-        else:
-            temp_state = State(self, self.initals_states[0].values, True, self.initals_states[0].get_value())
-            temp_state.is_initial = True
-            new_states.append(temp_state)
-            self.fill_transitions(temp_state)
+
 
         # création d'un tableau temporaire contenant les destinations des arretes de chaque état
         temp_tab = self.fill_temp_tab()
@@ -372,26 +361,8 @@ class Automaton:
                     values = [x for x in values if x]
                     self.states[i].transitions[self.alphabet[l]] = [value]                     # on ajoute la transition à l'état
                     self.states.append(State(self, values, True, value))                       # on ajoute un nouvel état avec comme valeur les valeurs de la transition vers un état pas encore existant
-                    new_states.append(self.states[-1])                                         # on ajoute le nouvel état à la liste des nouveaux états
                     self.fill_transitions(self.states[-1])                                     # on remplit les transitions de ce nouvel état
-                    self.fill_transitions(new_states[-1])                                      # on remplit les transitions de ce nouvel état
                     temp_tab = self.fill_temp_tab()                                            # on met à jour le tableau temporaire
-
-
-        for state in self.states:                                                               # on parcourt les états
-            for state2 in new_states:
-                for l in self.alphabet:
-                    if state2.transitions[l] == [state.get_value()] and state not in new_states:
-                        new_states.append(state)
-
-        self.states = new_states.copy()                                                        # on met à jour les états
-
-        for state in self.states:                                                               # on parcourt les états
-            if state.get_value() == "":
-                self.states.remove(state)
-            for l in self.alphabet:
-                if state.transitions[l] == [""]:
-                    state.transitions[l] = []
 
 
         for state in self.states:                                                               # on parcourt les états
@@ -417,9 +388,6 @@ class Automaton:
 
         # on met à jour les états initiaux et terminaux
         self.update_initials_terminal()
-
-        if not self.is_complete():
-            self.complete()
 
         return True
 

@@ -5,17 +5,47 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="75e6ca7a-f355-4593-8094-069e42f9e0b8" name="Changes" comment="minimise + is minimised + new test automatons files algorithm working, not returning automaton">
-      <change afterPath="$PROJECT_DIR$/Test_automaton/B1-1.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Test_automaton/B1-10.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Test_automaton/B1-2.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Test_automaton/B1-3.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Test_automaton/B1-4.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Test_automaton/B1-5.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Test_automaton/B1-6.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Test_automaton/B1-7.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Test_automaton/B1-8.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Test_automaton/B1-9.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/automatons-executions/B1-1-exe.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/automatons-executions/B1-10-exe.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/automatons-executions/B1-11-exe.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/automatons-executions/B1-12-exe.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/automatons-executions/B1-13-exe.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/automatons-executions/B1-14-exe.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/automatons-executions/B1-15-exe.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/automatons-executions/B1-16-exe.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/automatons-executions/B1-17-exe.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/automatons-executions/B1-18-exe.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/automatons-executions/B1-19-exe.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/automatons-executions/B1-2-exe.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/automatons-executions/B1-20-exe.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/automatons-executions/B1-21-exe.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/automatons-executions/B1-22-exe.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/automatons-executions/B1-23-exe.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/automatons-executions/B1-24-exe.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/automatons-executions/B1-25-exe.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/automatons-executions/B1-26-exe.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/automatons-executions/B1-27-exe.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/automatons-executions/B1-28-exe.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/automatons-executions/B1-29-exe.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/automatons-executions/B1-3-exe.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/automatons-executions/B1-30-exe.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/automatons-executions/B1-31-exe.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/automatons-executions/B1-32-exe.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/automatons-executions/B1-33-exe.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/automatons-executions/B1-34-exe.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/automatons-executions/B1-35-exe.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/automatons-executions/B1-36-exe.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/automatons-executions/B1-37-exe.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/automatons-executions/B1-38-exe.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/automatons-executions/B1-39-exe.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/automatons-executions/B1-4-exe.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/automatons-executions/B1-5-exe.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/automatons-executions/B1-6-exe.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/automatons-executions/B1-7-exe.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/automatons-executions/B1-8-exe.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/automatons-executions/B1-9-exe.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/automaton.py" beforeDir="false" afterPath="$PROJECT_DIR$/automaton.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -33,7 +63,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="Abdel-branch-3.1" />
+        <entry key="$PROJECT_DIR$" value="8d8607ec570175b21ea7d2e8f3130638b1685241" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -50,24 +80,27 @@
   &quot;associatedIndex&quot;: 8
 }</component>
   <component name="ProjectId" id="2d2aNLN1MlwiBnHwkyIXD5sRwzv" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.keymap&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "main",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.keymap",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected="Python.main">
     <configuration default="true" type="DjangoTestsConfigurationType">
       <module name="AutoPy" />
@@ -100,19 +133,6 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="ADDITIONAL_ARGS" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration default="true" type="Python.FlaskServer">
-      <module name="AutoPy" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="launchJavascriptDebuger" value="false" />
       <method v="2" />
     </configuration>
     <configuration default="true" type="PythonConfigurationType" factoryName="Python">
@@ -166,9 +186,10 @@
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
-      <option name="SDK_HOME" value="" />
+      <option name="SDK_HOME" value="/usr/bin/python3" />
+      <option name="SDK_NAME" value="Python 3.11" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
+      <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
@@ -179,6 +200,19 @@
       <option name="MODULE_MODE" value="false" />
       <option name="REDIRECT_INPUT" value="false" />
       <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="Python.FlaskServer">
+      <module name="AutoPy" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="launchJavascriptDebuger" value="false" />
       <method v="2" />
     </configuration>
     <configuration default="true" type="Tox" factoryName="Tox">
@@ -352,5 +386,15 @@
         <watch expression="lines" />
       </configuration>
     </watches-manager>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/AutoPy$picou.coverage" NAME="picou Coverage Results" MODIFIED="1709308233939" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/AutoPy$main.coverage" NAME="main Coverage Results" MODIFIED="1713735498593" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/AutoPy$keyboard.coverage" NAME="keyboard Coverage Results" MODIFIED="1710095070555" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/AutoPy$graph.coverage" NAME="graph Coverage Results" MODIFIED="1710076524887" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/AutoPy$file.coverage" NAME="file Coverage Results" MODIFIED="1710022447774" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/AutoPy$automaton.coverage" NAME="automaton Coverage Results" MODIFIED="1710028323067" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/AutoPy$menu.coverage" NAME="menu Coverage Results" MODIFIED="1710077234975" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/AutoPy$key.coverage" NAME="key Coverage Results" MODIFIED="1710095144376" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

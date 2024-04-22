@@ -33,3 +33,17 @@ automatons/B1-1.txt
 ├─────────┼─────────┤
 │   E/S   │    0    │
 └─────────┴─────────┘
+
+>> complement
+Automate complémenté avec succès
+
+>> show
+
+automatons/B1-1.txt
+┌─────────┬─────────┐
+│   E/S   │   État  │
+├─────────┼─────────┤
+│    E    │    0    │
+└─────────┴─────────┘
+
+>>
