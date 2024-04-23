@@ -1,0 +1,49 @@
+>> select 1
+Automate n°1 sélectionné
+
+>> test
+
+automatons/B1-1.txt
+┌─────────┬─────────┐
+│   E/S   │   État  │
+├─────────┼─────────┤
+│   E/S   │    0    │
+└─────────┴─────────┘
+Voulez-vous standardiser l'automate ? (o/n) : o
+
+automatons/B1-1.txt
+┌─────────┬─────────┐
+│   E/S   │   État  │
+├─────────┼─────────┤
+│   E/S   │    0    │
+└─────────┴─────────┘
+
+Automate déterminisé
+automatons/B1-1.txt
+┌─────────┬─────────┐
+│   E/S   │   État  │
+├─────────┼─────────┤
+│   E/S   │    0    │
+└─────────┴─────────┘
+
+Automate minimisé
+automatons/B1-1.txt
+┌─────────┬─────────┐
+│   E/S   │   État  │
+├─────────┼─────────┤
+│   E/S   │    0    │
+└─────────┴─────────┘
+
+>> complement
+Automate complémenté avec succès
+
+>> show
+
+automatons/B1-1.txt
+┌─────────┬─────────┐
+│   E/S   │   État  │
+├─────────┼─────────┤
+│    E    │    0    │
+└─────────┴─────────┘
+
+>>

@@ -46,11 +46,11 @@ class Automaton:
             # initialisation des états
             for line in lines:
                 if "-2" in line:
-                    self.states = [State(self, [i]) for i in range(int(lines[1]) - 1)]
+                    self.states = [State(self, [str(i)]) for i in range(int(lines[1]) - 1)]
                     self.states.append(State(self, [-2]))
                     self.states.sort(key=lambda x: x.values[0])
                 else:
-                    self.states = [State(self, [i]) for i in range(int(lines[1]))]
+                    self.states = [State(self, [str(i)]) for i in range(int(lines[1]))]
 
             # initialisation des états initiaux et terminaux
             self.initals_states = [int(x) for x in lines[2].split()[1:]]
@@ -111,13 +111,10 @@ class Automaton:
                 output += "│" + " ".center(9) + "│"
 
             # état
-            if s.get_value() == "-2":
-                output += "I".center(9) + "│"
-            else:
-                output += (s.get_value().center(9) + "│")
+            output += (s.get_value().center(9) + "│")
 
             # transitions
-            for i in range(len(self.alphabet)):
+            for i, letter in enumerate(self.alphabet):
                 if s.transitions[self.alphabet[i]] and not s.is_composed:
                     output += (",".join(map(str, s.transitions[self.alphabet[i]])).center(9) + "│")
                 elif s.is_composed:
@@ -131,15 +128,13 @@ class Automaton:
             if s != self.states[-1]:
                 output += ("├─────────" + "┼─────────" * (len(self.alphabet) + 1) + "┤\n")
 
-
-
         # dernière ligne
         output += ("└─────────" + "┴─────────" * (len(self.alphabet) + 1) + "┘")
 
         return output
 
 
-    # fonction pour mettre à jour les états initiaux et terminaux
+    # méthode pour mettre à jour les états initiaux et terminaux
     def update_initials_terminal(self):
         self.initals_states = [state for state in self.states if state.is_initial]
         self.terminal_states = [state for state in self.states if state.is_terminal]
@@ -148,6 +143,7 @@ class Automaton:
 
     # ------------------------------ Standardisation (Anaelle) --------------------------------- #
 
+    # méthode pour vérifier si l'automate est standard
     def is_standard(self):
 
         # vérification qu'on a un unique état initial
@@ -164,6 +160,7 @@ class Automaton:
         # si les deux conditions sont remplies, l'automate est standard
         return True
 
+    # méthode pour standardiser l'automate
     def standardize(self):  # fonction qui standardise l'automate
 
         if self.is_standard():  # Si l'automate est déjà standard, on ne fait rien
@@ -172,10 +169,10 @@ class Automaton:
         # stockage des anciens états
         old_states = self.states.copy()
 
-        # ajout de l'état initial I qui aura pour valeur -2
-        new_initial_state = State(self, [-2])
+        # ajout de l'état initial I qui aura pour valeur I
+        new_initial_state = State(self, ["I"])
 
-        # mettre la valeur is_initial de I initial à False
+        # mettre la valeur is_initial de I initial à True
         new_initial_state.is_initial = True
 
         # mettre la valeur is_terminal de I initial à True si un des états initiaux de l'automate est terminal
@@ -218,7 +215,7 @@ class Automaton:
 
 
         # trier les états par valeur croissante
-        self.states.sort(key=lambda x: x.values[0])
+        self.states.sort(key=lambda x: x.value)
 
 
         return True
@@ -226,10 +223,43 @@ class Automaton:
     # ------------------------------------------------------------------------------------------ #
 
     # -------------------------------- Completion (Camille) ------------------------------------ #
+
+    # méthode pour vérifier si l'automate est complet
+    def is_complete(self):
+
+        # vérification que chaque état a une transition pour chaque symbole de l'alphabet
+        for state in self.states:
+            for symbol in self.alphabet:
+                if state.transitions[symbol] == []:
+                    return False
+        return True
+
+    # méthode pour compléter l'automate
+    def complete(self):
+
+        if self.is_complete():
+            return True
+
+        else:
+
+            P = State(self, ["P"])                                  # création d'un nouvel état P
+            for symbol in self.alphabet:                           # on met P comme destination de chaque transition
+                P.transitions[symbol] = [P.get_value()]
+
+            for state in self.states:                              # on parcourt les états existants
+                for symbol in self.alphabet:                       # on parcourt les symboles de l'alphabet
+                    if state.transitions[symbol] == []:            # si l'état n'a pas de transition pour le symbole on ajoute P
+                        state.transitions[symbol] = [P.get_value()]
+
+            self.states.append(P)                                 # on ajoute P à la liste des états
+
+            return self
+
     # ------------------------------------------------------------------------------------------ #
 
     # ----------------------------- Determinisation (Abdel-Waheb) ------------------------------ #
 
+    # méthode pour vérifier si l'automate est déterministe
     def is_deterministic(self):
         # On regarde si il y a plusieurs états initiaux
         if len(self.initals_states) != 1:
@@ -241,7 +271,7 @@ class Automaton:
                     return False
         return True
 
-    # fonction pour remplir un tableau temporaire contenant les destinations des arretes de chaque état
+    # méthode pour remplir un tableau temporaire contenant les destinations des arretes de chaque état
     def fill_temp_tab(self):
 
         # initialisation des variables
@@ -255,7 +285,7 @@ class Automaton:
             index += 1
         return temp_tab
 
-    # fonction pour vérifier si il y a des doublons dans une chaine de caractères
+    # méthode pour vérifier si il y a des doublons dans une chaine de caractères
     def check_doublons_str(self, chaine):
         chaine = ''.join(sorted(chaine))
         resultat = ''
@@ -270,7 +300,7 @@ class Automaton:
             i += 1
         return resultat
 
-    # fonction pour remplir les transitions d'un nouvel état
+    # méthode pour remplir les transitions d'un nouvel état
     def fill_transitions(self, state):
         for v in state.values:                        # on parcourt les valeurs de l'état
             for l in self.alphabet:                   # on parcourt les lettres de l'alphabet
@@ -283,7 +313,8 @@ class Automaton:
                         state.transitions[l] = [union]                                         # on ajoute l'union à la transition de l'état
 
 
-    # fonction pour vérifier si il y a des doublons dans les transitions
+
+    # méthode pour vérifier si il y a des doublons dans les transitions
     def check_doublons_tab(self, tab):
         for e in tab:
             for i in tab:
@@ -291,17 +322,21 @@ class Automaton:
                     return True
         return False
 
+    # méthode pour déterminiser l'automate
     def determine(self):
 
         # si l'automate est déjà déterminisé, on ne fait rien
         if self.is_deterministic():
             return False
 
+        # si l'automate n'est pas complet, on le complète
+        if not self.is_complete():
+            self.complete()
 
         # si il y a plusieurs états initiaux, on les fusionne
         if len(self.initals_states) > 1:
             temp_values = [str(s.values[0]) for s in self.initals_states]
-            initial_state = State(self, temp_values)
+            initial_state = State(self, temp_values, True, "".join(temp_values))
             initial_state.is_initial = True
             for s in self.initals_states:
                 if s.is_initial:
@@ -309,21 +344,32 @@ class Automaton:
             self.states.append(initial_state)
             self.fill_transitions(self.states[-1])
 
+
         # création d'un tableau temporaire contenant les destinations des arretes de chaque état
         temp_tab = self.fill_temp_tab()
+
 
         # déterminisation de l'automate
         for i, state in enumerate(self.states):                                                # on parcourt les états
             for l in range(len(self.alphabet)):                                                # on parcourt les lettres de l'alphabet
-                if ''.join(temp_tab[i][l]) not in [s.get_value() for s in self.states]:        # on vérifie si la transition n'existe pas déjà
-                    if(self.check_doublons_tab(temp_tab[i][l])):                              # si il y a des doublons dans les transitions on quitte la boucle
+                value = ''.join(temp_tab[i][l])                                                # on récupère la valeur de la transition
+                value = ''.join(sorted(value))                                                 # on trie la valeur
+                if value not in [s.get_value() for s in self.states]:                          # on vérifie si la transition n'existe pas déjà
+                    if(self.check_doublons_tab(temp_tab[i][l])):                               # si il y a des doublons dans les transitions on quitte la boucle
                         break
-                    int_values = [int(x) for x in temp_tab[i][l]]                              # on convertit les valeurs en int
-                    val = "".join(str(e) for e in int_values)                                  # on convertit les valeurs
-                    self.states[i].transitions[self.alphabet[l]] = [val]                       # on ajoute la transition à l'état
-                    self.states.append(State(self, temp_tab[i][l], True, val))                 # on ajoute un nouvel état avec comme valeur les valeurs de la transition vers un état pas encore existant
+                    values = re.split(r'(?<!-)', value)
+                    values = [x for x in values if x]
+                    self.states[i].transitions[self.alphabet[l]] = [value]                     # on ajoute la transition à l'état
+                    self.states.append(State(self, values, True, value))                       # on ajoute un nouvel état avec comme valeur les valeurs de la transition vers un état pas encore existant
                     self.fill_transitions(self.states[-1])                                     # on remplit les transitions de ce nouvel état
                     temp_tab = self.fill_temp_tab()                                            # on met à jour le tableau temporaire
+
+
+        for state in self.states:                                                               # on parcourt les états
+            for letter in self.alphabet:                                                        # on parcourt les lettres de l'alphabet
+                if len(state.transitions[letter]) > 1:                                          # si il y a plusieurs transitions
+                    state.transitions[letter] = ["".join(state.transitions[letter])]            # on garde la première transition
+
 
         # on met à jour les transitions
         for letter in self.alphabet:
@@ -351,11 +397,28 @@ class Automaton:
 
     # ------------------------------- Minimisation (Thomas) ------------------------------------ #
 
+    # méthode pour vérifier si l'automate est minimisé
     def is_minimised(self):
+
+        # Si l'automate à 1 seul état ou moins, alors il est minimisé
+        if len(self.states) <= 1:
+            return True
+
+        # si l'automate n'est pas complet, on le complète
+        if not self.is_complete():
+            self.complete()
+
+        # si l'automate n'est pas déterministe, on le déterminise
+        if not self.is_deterministic():
+            self.determine()
 
         # Initialisation de la partition 0
         P_prev = []
         P = [self.terminal_states, [state for state in self.states if state not in self.terminal_states]]
+
+        # Si un des groupes est vide, alors l'automate est minimisé
+        if P[0] == [] or P[1] == []:
+            return True
 
         # Création du tableau de transitions
         cur_group = []
@@ -410,7 +473,23 @@ class Automaton:
                     # Parcours de chaque sous groupe pour voir appartenance
                     for k in range(len(temp_list)):
                         # Comparaison entre les transition du premier élément du groupe (même transition pour chaque élément du grp) à l'état que l'on veut insérer
-                        if (cur_group[temp_list_int[k][0]] == cur_group[P_int[group][state]]):
+
+                        # si l'état contient un P, on récupère l'index de l'état dans la liste des états
+                        if 'P' in str(P_int[group][state]) or 'I' in str(P_int[group][state]):
+                            temp = [s.get_value() for s in self.states]
+                            p_index = temp.index(P_int[group][state])
+                            to_compare = cur_group[p_index]
+                        else:
+                            to_compare = cur_group[int(P_int[group][state])]
+
+                        if 'P' in temp_list_int[k][0] or 'I' in temp_list_int[k][0]:
+                            temp = [s.get_value() for s in self.states]
+                            p_index = temp.index(P_int[group][state])
+                            to_compare2 = cur_group[p_index]
+                        else:
+                            to_compare2 = cur_group[int(temp_list_int[k][0])]
+
+                        if to_compare2 == to_compare:
                             temp_list[k].append(P[group][state])
                             temp_list_int[k].append(P_int[group][state])
                             found = 1
@@ -423,12 +502,11 @@ class Automaton:
                 for l in range(len(temp_list)):
                     P_new.append(temp_list[l])
 
-
         # Mise à jour de la partition précédente et de la nouvelle partition
         return P == P_new
 
 
-
+    # méthode pour minimiser l'automate
     def minimise(self):
 
         if self.is_minimised():
@@ -494,7 +572,23 @@ class Automaton:
                         # Parcours de chaque sous groupe pour voir appartenance
                         for k in range(len(temp_list)):
                             # Comparaison entre les transition du premier élément du groupe (même transition pour chaque élément du grp) à l'état que l'on veut insérer
-                            if (cur_group[temp_list_int[k][0]] == cur_group[P_int[group][state]]):
+
+                            # si l'état contient un P, on récupère l'index de l'état dans la liste des états
+                            if 'P' in str(P_int[group][state]) or 'I' in str(P_int[group][state]):
+                                temp = [s.get_value() for s in self.states]
+                                p_index = temp.index(P_int[group][state])
+                                to_compare = cur_group[p_index]
+                            else:
+                                to_compare = cur_group[int(P_int[group][state])]
+
+                            if 'P' in temp_list_int[k][0] or 'I' in temp_list_int[k][0]:
+                                temp = [s.get_value() for s in self.states]
+                                p_index = temp.index(P_int[group][state])
+                                to_compare2 = cur_group[p_index]
+                            else:
+                                to_compare2 = cur_group[int(temp_list_int[k][0])]
+
+                            if to_compare2 == to_compare:
                                 temp_list[k].append(P[group][state])
                                 temp_list_int[k].append(P_int[group][state])
                                 found = 1
@@ -523,7 +617,7 @@ class Automaton:
         for index, group in enumerate(P):
 
             # on crée un nouvel état
-            new_state = State(self, [index])
+            new_state = State(self, str(index))
 
             # on parcourt les transitions du nouvel état pour les remplir
             for l in self.alphabet:
@@ -563,16 +657,12 @@ class Automaton:
     # ------------------------------------------------------------------------------------------ #
 
 
-    # -------------------------------- Reconnaisance (Maryam) ---------------------------------- #
+    # ----------------------- Reconnaisance et Complémentaire (Maryam) ------------------------- #
 
-    # fonction pour reconnaitre un mot
+    # méthode pour reconnaitre un mot
     def recognize(self, word):
 
-        # vérifications: standard, déterministe, mot dans l'alphabet
-        if not self.is_standard():
-            print("Erreur : l'automate n'est pas standard")
-            return False
-
+        # vérifications: déterministe, mot dans l'alphabet
         if not self.is_deterministic():
             print("Erreur : l'automate n'est pas déterministe")
             return False
@@ -585,28 +675,37 @@ class Automaton:
         # initialisation de la liste des états actifs
         active_states = self.initals_states.copy()
 
-        # parcours du mot
+        # parcours des lettres du mot
         for letter in word:
 
-            # initialisation de la liste des états actifs suivants
-            next_active_states = []
+            # initialisation de la liste des états actifs temporaire
+            temp_active_states = []
 
             # parcours des états actifs
             for state in active_states:
 
-                # ajout des états suivants
-                next_active_states += [self.states[int(dest)] for dest in state.transitions[letter]]
+                # ajout des états de destination à la liste des états actifs temporaire
+                temp_transition = [str(x) for x in state.transitions[letter]]
+                temp_active_states += [s for s in self.states if s.get_value() in temp_transition]
 
-            # mise à jour des états actifs
-            active_states = next_active_states
+            # mise à jour de la liste des états actifs
+            active_states = temp_active_states.copy()
 
         # vérification si un des états actifs est terminal
-        print("Le mot est reconnu") if any(state.is_terminal for state in active_states) else "Le mot n'est pas reconnu"
+        print("Le mot est reconnu") if any(state.is_terminal for state in active_states) else print("Le mot n'est pas reconnu")
         return any(state.is_terminal for state in active_states)
 
+    # méthode pour donner le complémentaire de l'automate
+    def completary(self):
 
+        passerelle = []                                         # initialisation d'une liste passerelle
 
+        for state in self.states:                               # parcours des états
+            if not state.is_terminal:                           # si l'état n'est pas terminal on le rend terminal
+                passerelle.append(state.get_value())
+            state.is_terminal = not state.is_terminal           # on inverse la valeur de is_terminal
 
+        self.terminal_states = passerelle                       # on met à jour les états terminaux
 
     # ------------------------------------------------------------------------------------------ #
 
