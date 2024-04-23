@@ -269,7 +269,7 @@ if __name__ == "__main__":
             main.automatons.append(Automaton(f"B1_automatons/B1-{i+1}.txt"))
             main.automaton = main.automatons[-1]
 
-   
+
 
 
     main.loop()

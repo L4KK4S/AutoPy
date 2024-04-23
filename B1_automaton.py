@@ -117,7 +117,7 @@ class Automaton:
             for i, letter in enumerate(self.alphabet):
                 if s.transitions[self.alphabet[i]] and not s.is_composed:
                     output += (",".join(map(str, s.transitions[self.alphabet[i]])).center(9) + "│")
-                elif s.is_composed:
+                elif s.is_composed and s.transitions[self.alphabet[i]] != []:
                     output += ("".join(s.transitions[self.alphabet[i]]).center(9) + "│")
                 else:
                     output += ("-".center(9) + "│")
@@ -329,10 +329,6 @@ class Automaton:
         if self.is_deterministic():
             return False
 
-        # si l'automate n'est pas complet, on le complète
-        if not self.is_complete():
-            self.complete()
-
         # si il y a plusieurs états initiaux, on les fusionne
         if len(self.initals_states) > 1:
             temp_values = [str(s.values[0]) for s in self.initals_states]
@@ -364,6 +360,17 @@ class Automaton:
                     self.fill_transitions(self.states[-1])                                     # on remplit les transitions de ce nouvel état
                     temp_tab = self.fill_temp_tab()                                            # on met à jour le tableau temporaire
 
+        # on supprime l'état fantome et corrige les trasnitions vides
+        for state in self.states:
+            if state.get_value() == "":
+                self.states.remove(state)
+            for letter in self.alphabet:
+                if state.transitions[letter] == [""]:
+                    state.transitions[letter] = []
+
+        # si l'automate n'est pas complet, on le complète
+        if not self.is_complete():
+            self.complete()
 
         for state in self.states:                                                               # on parcourt les états
             for letter in self.alphabet:                                                        # on parcourt les lettres de l'alphabet
