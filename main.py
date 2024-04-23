@@ -12,17 +12,31 @@ class Main:
 /    \) \/ (  )( (  O )) __/ )  / 
 \_/\_/\____/ (__) \__/(__)  (__/  
                                 """
-        self.help_text = "\nBienvenue sur Autopy, un programme permettant de gérer les automates finis, voici la liste des commandes et leurs fonctions:\n\n" \
-                         "     help: permet d'afficher l'aide\n" \
-                         "     list: liste les différents automates chargés\n" \
-                         "     load <fichier>.txt: charge un automate à partir d'un fichier texte\n" \
-                         "     select <numéro>: sélectionne un automate parmi la liste des automates enregistrés\n" \
-                         "     current: affiche l'automate actuellement sélectionné\n" \
-                         "     show: affiche le tableau des transitions de l'automate actuellement sélectionné\n" \
-                         "     graph: affiche un gaphe de l'automate actuellement sélectionné\n" \
-                         "     standard -<option>: opérations sur la standardisation\n" \
-                         "         -v: vérifie si l'automate est standard\n" \
-                         "         -s: standardise l'automate\n"
+        self.help_text = "\nBienvenue sur Autopy, un programme permettant de gérer les automates finis, voici la liste des commandes et leurs fonctionalités:\n\n" \
+                         "     Commandes sytème:\n" \
+                         "          help:                            permet d'afficher l'aide\n" \
+                         "          clear:                           efface la console\n" \
+                         "          quit:                            quitte le programme\n\n" \
+                         "     Commandes de bases pour l'automate:\n" \
+                         "          load <fichier>.txt <option>:     charge un automate à partir d'un fichier texte\n" \
+                         "              -c:                          sélectionne l'automate chargé\n" \
+                         "          list <option>:                   liste les différents automates chargés\n" \
+                         "          select <numéro>:                 sélectionne un automate parmi la liste des automates enregistrés\n" \
+                         "          current:                         affiche l'automate actuellement sélectionné\n" \
+                         "          show:                            affiche le tableau des transitions de l'automate actuellement sélectionné\n" \
+                         "          graph:                           affiche un gaphe de l'automate actuellement sélectionné\n" \
+                         "          save <fichier>.txt:              enregistre l'automate actuellement sélectionné dans un fichier texte\n" \
+                         "          read <mot>:                      regarde si l'automate reconnait un mot\n\n" \
+                         "     Commandes avancées pour l'automate:\n"\
+                         "          standard -<option>:              opérations sur la standardisation\n" \
+                         "              -v:                          vérifie si l'automate est standard\n" \
+                         "              -a:                          standardise l'automate\n"\
+                         "          determine -<option>:             opérations sur la déterminisation\n"\
+                         "              -v:                          vérifie si l'automate est déterministe\n" \
+                         "              -a:                          détermine l'automate\n" \
+                         "          minimise -<option>:              opérations sur la minimisation\n" \
+                         "              -v:                          vérifie si l'automate est miniminal\n" \
+                         "              -a:                          minimise l'automate\n"
         self.automatons = []
         self.automaton = None
 
@@ -48,8 +62,16 @@ class Main:
 
             # commande load: charge un automate à partir d'un fichier texte
             elif command[0] == "load":
-                if len(command) != 2:
+                if len(command) not in [2, 3]:
                     print("Erreur: nombre d'arguments invalide")
+                elif len(command) == 3:
+                    if command[2] != "-c":
+                        print("Erreur: deuxième argument invalide")
+                    else:
+                        if self.input_automaton(command[1]):
+                            self.automatons.append(Automaton(command[1]))
+                            self.automaton = self.automatons[-1]
+                            print("Automate chargé avec succès")
                 else:
                     if self.input_automaton(command[1]):
                         self.automatons.append(Automaton(command[1]))
@@ -90,6 +112,23 @@ class Main:
                 else:
                     graph.graph(self.automaton)
 
+            # commande clear: efface la console
+            elif command[0] == "clear":
+                os.system('cls' if os.name == 'nt' else 'clear')
+
+            # commande exit: quitte le programme
+            elif command[0] == "exit" or command[0] == "quit" or command[0] == "q":
+                self.run = False
+
+            # commande read: regarde si l'automate reconnait un mot
+            elif command[0] == "read":
+                if len(command) != 2:
+                    print("Erreur: nombre d'arguments invalide")
+                elif self.automaton is None:
+                    print("Erreur: aucun automate n'est sélectionné")
+                else:
+                    self.automaton.recognize(command[1])
+
             # commande standard: opérations sur la standardisation
             elif command[0] == "standard":
                 if len(command) != 2:
@@ -99,9 +138,36 @@ class Main:
                 else:
                     if command[1] == "-v":
                         print("L'automate est standard") if self.automaton.is_standard() else print("L'automate n'est pas standard")
-                    elif command[1] == "-s":
-                        self.automaton.standardize()
-                        print("Automate standardisé avec succès")
+                    elif command[1] == "-a":
+                        print("Automate standardisé avec succès") if self.automaton.standardize() else print("Erreur: l'automate est déjà standard")
+                    else:
+                        print("Erreur: argument invalide")
+
+            # commande determine: opérations sur la déterminisation
+            elif command[0] == "determine":
+                if len(command) != 2:
+                    print("Erreur: nombre d'arguments invalide")
+                elif self.automaton is None:
+                    print("Erreur: aucun automate n'est sélectionné")
+                else:
+                    if command[1] == "-v":
+                        print("L'automate est déterministe") if self.automaton.is_deterministic() else print("L'automate n'est pas déterministe")
+                    elif command[1] == "-a":
+                        print("Automate déterminisé avec succès") if self.automaton.determine() else print("Erreur: l'automate est déjà déterministe")
+                    else:
+                        print("Erreur: argument invalide")
+
+            # commande minimize: opérations sur la minimisation
+            elif command[0] == "minimise":
+                if len(command) != 2:
+                    print("Erreur: nombre d'arguments invalide")
+                elif self.automaton is None:
+                    print("Erreur: aucun automate n'est sélectionné")
+                else:
+                    if command[1] == "-v":
+                        print("L'automate est minimal") if self.automaton.is_minimised() else print("L'automate n'est pas minimal")
+                    elif command[1] == "-a":
+                        print("Automate minimisé avec succès") if self.automaton.minimise() else print("Erreur: l'automate est déjà minimal")
                     else:
                         print("Erreur: argument invalide")
 
@@ -118,6 +184,8 @@ class Main:
                 else:
                     self.save_automaton(command[1])
                     print(f"Automate enregistré avec succès dans le fichier {command[1]}")
+
+
 
             # commande clear: efface la console
             elif command[0] == "clear":
@@ -187,7 +255,20 @@ class Main:
 
 if __name__ == "__main__":
     main = Main()
-    main.automatons.append(Automaton("bob_standard.txt"))
-    main.automatons.append(Automaton("bob.txt"))
-    main.automaton = main.automatons[0]
+
+    for i in range(44):
+        if (i+1) not in [31, 32, 33, 34, 35]:
+            main.automatons.append(Automaton(f"automatons/B1-{i+1}.txt"))
+            main.automaton = main.automatons[-1]
+            #print(main.automaton)
+
+    main.automaton = main.automatons[6]
+    print(main.automaton)
+    print(main.automaton.is_standard())
+
+    """ main.automaton = main.automatons[35]
+    print(main.automaton)
+    main.automaton.recognize("aaaaa")
+    """
+
     main.loop()
