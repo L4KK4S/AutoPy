@@ -329,6 +329,8 @@ class Automaton:
         if self.is_deterministic():
             return False
 
+        new_states = []  # initialisation de la liste des nouveaux états
+
         # si il y a plusieurs états initiaux, on les fusionne
         if len(self.initals_states) > 1:
             temp_values = [str(s.values[0]) for s in self.initals_states]
@@ -338,45 +340,47 @@ class Automaton:
                 if s.is_initial:
                     s.is_initial = False
             self.states.append(initial_state)
+            new_states.append(initial_state)
             self.fill_transitions(self.states[-1])
-
+            self.fill_transitions(new_states[-1])
+        else:
+            temp_state = State(self, self.initals_states[0].values, True, self.initals_states[0].get_value())
+            temp_state.is_initial = True
+            new_states.append(temp_state)
+            self.fill_transitions(temp_state)
 
         # création d'un tableau temporaire contenant les destinations des arretes de chaque état
         temp_tab = self.fill_temp_tab()
 
-
         # déterminisation de l'automate
-        for i, state in enumerate(self.states):                                                # on parcourt les états
-            for l in range(len(self.alphabet)):                                                # on parcourt les lettres de l'alphabet
-                value = ''.join(temp_tab[i][l])                                                # on récupère la valeur de la transition
-                value = ''.join(sorted(value))                                                 # on trie la valeur
-                if value not in [s.get_value() for s in self.states]:                          # on vérifie si la transition n'existe pas déjà
-                    if(self.check_doublons_tab(temp_tab[i][l])):                               # si il y a des doublons dans les transitions on quitte la boucle
+        for i, state in enumerate(self.states):  # on parcourt les états
+            for l in range(len(self.alphabet)):  # on parcourt les lettres de l'alphabet
+                value = ''.join(temp_tab[i][l])  # on récupère la valeur de la transition
+                value = ''.join(sorted(value))  # on trie la valeur
+                if value not in [s.get_value() for s in
+                                 new_states] and value != "":  # on vérifie si la transition n'est pas deja un état existant
+                    if (self.check_doublons_tab(
+                            temp_tab[i][l])):  # si il y a des doublons dans les transitions on quitte la boucle
                         break
                     values = re.split(r'(?<!-)', value)
                     values = [x for x in values if x]
-                    self.states[i].transitions[self.alphabet[l]] = [value]                     # on ajoute la transition à l'état
-                    self.states.append(State(self, values, True, value))                       # on ajoute un nouvel état avec comme valeur les valeurs de la transition vers un état pas encore existant
-                    self.fill_transitions(self.states[-1])                                     # on remplit les transitions de ce nouvel état
-                    temp_tab = self.fill_temp_tab()                                            # on met à jour le tableau temporaire
+                    self.states[i].transitions[self.alphabet[l]] = [value]  # on ajoute la transition à l'état
+                    self.states.append(State(self, values, True,
+                                             value))  # on ajoute un nouvel état avec comme valeur les valeurs de la transition vers un état pas encore existant
+                    new_states.append(self.states[-1])  # on ajoute le nouvel état à la liste des nouveaux états
+                    self.fill_transitions(self.states[-1])  # on remplit les transitions de ce nouvel état
+                    self.fill_transitions(new_states[-1])  # on remplit les transitions de ce nouvel état
+                    temp_tab = self.fill_temp_tab()  # on met à jour le tableau temporaire
 
-        # on supprime l'état fantome et corrige les trasnitions vides
-        for state in self.states:
-            if state.get_value() == "":
-                self.states.remove(state)
-            for letter in self.alphabet:
-                if state.transitions[letter] == [""]:
-                    state.transitions[letter] = []
+        self.states = new_states  # on met à jour les états
 
-        # si l'automate n'est pas complet, on le complète
-        if not self.is_complete():
-            self.complete()
-
-        for state in self.states:                                                               # on parcourt les états
-            for letter in self.alphabet:                                                        # on parcourt les lettres de l'alphabet
-                if len(state.transitions[letter]) > 1:                                          # si il y a plusieurs transitions
-                    state.transitions[letter] = ["".join(state.transitions[letter])]            # on garde la première transition
-
+        for state in self.states:  # on parcourt les états
+            for letter in self.alphabet:  # on parcourt les lettres de l'alphabet
+                if state.transitions[letter] == [""]:  # si il n'y a pas de transition
+                    state.transitions[letter] = []  # on met une transition vide
+                elif len(state.transitions[letter]) > 1:  # si il y a plusieurs transitions
+                    state.transitions[letter] = [
+                        "".join(state.transitions[letter])]  # on garde la première transition
 
         # on met à jour les transitions
         for letter in self.alphabet:
@@ -396,8 +400,10 @@ class Automaton:
         # on met à jour les états initiaux et terminaux
         self.update_initials_terminal()
 
-        return True
+        if not self.is_complete():
+            self.complete()
 
+        return True
 
     # ------------------------------------------------------------------------------------------ #
 
