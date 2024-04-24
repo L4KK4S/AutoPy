@@ -264,10 +264,10 @@ class Automaton:
         # On regarde si il y a plusieurs états initiaux
         if len(self.initals_states) != 1:
             return False
-        # Vérifier si chaque état a exactement une transition pour chaque symbole de l'alphabet
+        # Vérifier si chaque état a exactement une transition ou moins pour chaque symbole de l'alphabet
         for state in self.states:
             for letter, destinations in state.transitions.items():
-                if len(destinations) != 1:
+                if len(destinations) <= 1:
                     return False
         return True
 

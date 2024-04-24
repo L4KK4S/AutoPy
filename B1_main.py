@@ -176,8 +176,7 @@ class Main:
                     print("Erreur: aucun automate n'est sélectionné")
                 else:
                     if command[1] == "-v":
-                        if self.automaton.is_deterministic():
-                            print("L'automate est déterministe")
+                        print("L'automate est déterministe") if self.automaton.is_deterministic() else print("L'automate n'est pas déterministe")                        
                     elif command[1] == "-a":
                         print("Automate déterminisé avec succès") if self.automaton.determine() else print("Erreur: l'automate est déjà déterministe")
                     else:
