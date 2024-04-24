@@ -245,15 +245,15 @@ class Automaton:
         else:
 
             P = State(self, ["P"])                                  # création d'un nouvel état P
-            for symbol in self.alphabet:                           # on met P comme destination de chaque transition
+            for symbol in self.alphabet:                            # on met P comme destination de chaque transition
                 P.transitions[symbol] = [P.get_value()]
 
-            for state in self.states:                              # on parcourt les états existants
-                for symbol in self.alphabet:                       # on parcourt les symboles de l'alphabet
-                    if state.transitions[symbol] == []:            # si l'état n'a pas de transition pour le symbole on ajoute P
+            for state in self.states:                               # on parcourt les états existants
+                for symbol in self.alphabet:                        # on parcourt les symboles de l'alphabet
+                    if state.transitions[symbol] == [] :            # si l'état n'a pas de transition pour le symbole on ajoute P
                         state.transitions[symbol] = [P.get_value()]
 
-            self.states.append(P)                                 # on ajoute P à la liste des états
+            self.states.append(P)                                   # on ajoute P à la liste des états
 
             return self
 
@@ -331,7 +331,6 @@ class Automaton:
     # méthode pour déterminiser l'automate
     def determine(self):
 
-
         # si l'automate est déjà déterminisé, on ne fait rien
         if self.is_deterministic():
             return False
@@ -359,13 +358,12 @@ class Automaton:
         # création d'un tableau temporaire contenant les destinations des arretes de chaque état
         temp_tab = self.fill_temp_tab()
 
-
         # déterminisation de l'automate
         for i, state in enumerate(self.states):                                                # on parcourt les états
             for l in range(len(self.alphabet)):                                                # on parcourt les lettres de l'alphabet
                 value = ''.join(temp_tab[i][l])                                                # on récupère la valeur de la transition
                 value = ''.join(sorted(value))                                                 # on trie la valeur
-                if value not in [s.get_value() for s in self.states]:                          # on vérifie si la transition n'existe pas déjà
+                if value not in [s.get_value() for s in new_states] and value != "":           # on vérifie si la transition n'est pas deja un état existant
                     if(self.check_doublons_tab(temp_tab[i][l])):                               # si il y a des doublons dans les transitions on quitte la boucle
                         break
                     values = re.split(r'(?<!-)', value)
@@ -378,27 +376,14 @@ class Automaton:
                     temp_tab = self.fill_temp_tab()                                            # on met à jour le tableau temporaire
 
 
-        for state in self.states:                                                               # on parcourt les états
-            for state2 in new_states:
-                for l in self.alphabet:
-                    if state2.transitions[l] == [state.get_value()] and state not in new_states:
-                        new_states.append(state)
-
-        self.states = new_states.copy()                                                        # on met à jour les états
-
-        for state in self.states:                                                               # on parcourt les états
-            if state.get_value() == "":
-                self.states.remove(state)
-            for l in self.alphabet:
-                if state.transitions[l] == [""]:
-                    state.transitions[l] = []
-
+        self.states = new_states # on met à jour les états
 
         for state in self.states:                                                               # on parcourt les états
             for letter in self.alphabet:                                                        # on parcourt les lettres de l'alphabet
-                if len(state.transitions[letter]) > 1:                                          # si il y a plusieurs transitions
+                if state.transitions[letter] == [""]:                                             # si il n'y a pas de transition
+                    state.transitions[letter] = []                                            # on met une transition vide
+                elif len(state.transitions[letter]) > 1:                                          # si il y a plusieurs transitions
                     state.transitions[letter] = ["".join(state.transitions[letter])]            # on garde la première transition
-
 
         # on met à jour les transitions
         for letter in self.alphabet:

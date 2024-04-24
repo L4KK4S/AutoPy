@@ -301,6 +301,8 @@
       <workItem from="1713541448734" duration="5125000" />
       <workItem from="1713635064904" duration="2038000" />
       <workItem from="1713715185851" duration="4332000" />
+      <workItem from="1713736075695" duration="592000" />
+      <workItem from="1713994923275" duration="1964000" />
     </task>
     <servers />
   </component>
@@ -350,6 +352,6 @@
     <SUITE FILE_PATH="coverage/AutoPy$file.coverage" NAME="file Coverage Results" MODIFIED="1709306081885" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/AutoPy$keyboard.coverage" NAME="keyboard Coverage Results" MODIFIED="1710095070555" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/AutoPy$automaton.coverage" NAME="automaton Coverage Results" MODIFIED="1711117630563" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/AutoPy$main.coverage" NAME="main Coverage Results" MODIFIED="1713719586851" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/AutoPy$main.coverage" NAME="main Coverage Results" MODIFIED="1713996866058" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
