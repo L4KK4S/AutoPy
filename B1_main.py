@@ -161,7 +161,7 @@ class Main:
                     print("Erreur: aucun automate n'est sélectionné")
                 else:
                     if command[1] == "-v":
-                        print("L'automate est standard") if self.automaton.is_standard() else print("L'automate n'est pas standard")
+                        self.automaton.is_standard(debug=True)
                     elif command[1] == "-a":
                         print("Automate standardisé avec succès") if self.automaton.standardize() else print("Erreur: l'automate est déjà standard")
                     else:
@@ -175,7 +175,7 @@ class Main:
                     print("Erreur: aucun automate n'est sélectionné")
                 else:
                     if command[1] == "-v":
-                        print("L'automate est déterministe") if self.automaton.is_deterministic() else print("L'automate n'est pas déterministe")
+                        self.automaton.is_deterministic(debug=True)
                     elif command[1] == "-a":
                         print("Automate déterminisé avec succès") if self.automaton.determine() else print("Erreur: l'automate est déjà déterministe")
                     else:
@@ -239,14 +239,19 @@ class Main:
         # affichage de l'automate
         print(self.automaton)
 
-        # standardisation
-        input_text = ""
-        while input_text != "o" and input_text != "n":
-            input_text = input("Voulez-vous standardiser l'automate ? (o/n) : ")
+        if main.automaton.is_standard():
+            print("L'automate est standard")
+        else:
+            print("L'automate n'est pas standard")
 
-        if input_text == "o":
-            self.automaton.standardize()
-            print(self.automaton)
+            # standardisation
+            input_text = ""
+            while input_text != "o" and input_text != "n":
+                input_text = input("Voulez-vous standardiser l'automate ? (o/n) : ")
+
+            if input_text == "o":
+                self.automaton.standardize()
+                print(self.automaton)
 
         # déterminisation
         self.automaton.determine()

@@ -144,10 +144,12 @@ class Automaton:
     # ------------------------------ Standardisation (Anaelle) --------------------------------- #
 
     # méthode pour vérifier si l'automate est standard
-    def is_standard(self):
+    def is_standard(self, debug=False):
 
         # vérification qu'on a un unique état initial
         if len(self.initals_states) != 1:  # on regarde si on a un nombre d'états initiaux différent de 1
+            if debug:
+                print("L'automate n'a pas un unique état initial donc il n'est pas standard")
             return False  # l'automate est non standard
 
         initial_state = self.initals_states[0]  # stock l'unique état initial dans la variable initial_state
@@ -155,9 +157,13 @@ class Automaton:
         # vérification qu'il n'y a aucune transition menant à l'unique état initial
         for transition in self.transitions:  # on parcourt toutes les transitions
             if transition[2] == initial_state.get_value():  # on regarde si l'état d'arrivée de la transition correspond à l'état initial
+                if debug:
+                    print(f"La transition {transition} mène à l'état initial donc l'automate n'est pas standard")
                 return False
 
         # si les deux conditions sont remplies, l'automate est standard
+        if debug:
+            print("L'automate est standard")
         return True
 
     # méthode pour standardiser l'automate
@@ -260,15 +266,21 @@ class Automaton:
     # ----------------------------- Determinisation (Abdel-Waheb) ------------------------------ #
 
     # méthode pour vérifier si l'automate est déterministe
-    def is_deterministic(self):
+    def is_deterministic(self, debug=False):
         # On regarde si il y a plusieurs états initiaux
         if len(self.initals_states) != 1:
+            if debug:
+                print("L'automate n'a pas un unique état initial donc il n'est pas déterministe")
             return False
         # Vérifier si chaque état a exactement une transition ou moins pour chaque symbole de l'alphabet
         for state in self.states:
             for letter, destinations in state.transitions.items():
-                if len(destinations) <= 1:
+                if len(destinations) > 1:
+                    if debug:
+                        print("L'automate est déterministe car l'état", state.get_value(), "a plusieurs destinations pour la lettre", letter)
                     return False
+        if debug:
+            print("L'automate est déterministe")
         return True
 
     # méthode pour remplir un tableau temporaire contenant les destinations des arretes de chaque état
@@ -328,6 +340,11 @@ class Automaton:
         # si l'automate est déjà déterminisé, on ne fait rien
         if self.is_deterministic():
             return False
+
+        # on récupère l'automate initial
+        for state in self.states:
+            if state.get_value() == "I":
+                self.initialize(self.filename)
 
         new_states = []  # initialisation de la liste des nouveaux états
 
