@@ -1,5 +1,6 @@
 # AutoPy
 
+![Problème d'affichage :(](https://raw.githubusercontent.com/L4KK4S/AutoPy/main/.img/Titre.png?token=GHSAT0AAAAAACO54V4BR4FX4HLYE3XK4UMYZPODUJQ)
 ![Problème d'affichage :(](../main/img/Titre.png)
     
 **DESCRIPTION**
@@ -19,6 +20,7 @@ Ce projet à été réalisé dans le cadre du module SM402 - Automates finis et 
 **COMMENT CA MARCHE?**
 
 Vous pouvez utiliser toutes ces commandes:
+![Problème d'affichage :(](https://raw.githubusercontent.com/L4KK4S/AutoPy/main/.img/Commandes.png?token=GHSAT0AAAAAACO54V4BME3TABIAZ3D74XWWZPODU6Q)
 ![Problème d'affichage :(](../main/img/Commandes.png)
 Si vous voulez les revoir utilisez ``help``
 

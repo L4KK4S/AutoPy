@@ -1,4 +1,4 @@
-from automaton import Automaton
+from B1_automaton import Automaton
 import os
 
 class Main:
@@ -12,7 +12,6 @@ class Main:
 \_/\_/\____/ (__) \__/(__)  (__/  
                                 """
         self.help_text = "\nBienvenue sur Autopy, un programme permettant de gérer les automates finis, voici la liste des commandes et leurs fonctionalités:\n\n" \
-                         "     Commandes sytème:\n" \
                          "     Commandes sytème:\n" \
                          "          help:                            permet d'afficher l'aide\n" \
                          "          clear:                           efface la console\n" \
@@ -140,8 +139,7 @@ class Main:
                     print("Erreur: aucun automate n'est sélectionné")
                 else:
                     if command[1] == "-v":
-                        if self.automaton.is_complete(debug=True):
-                            print("L'automate est complet")
+                        print("L'automate est complet") if self.automaton.is_complete() else print("L'automate n'est pas complet")
                     elif command[1] == "-a":
                         print("Automate complété avec succès") if self.automaton.complete() else print("Erreur: l'automate est déjà complet")
                     else:
@@ -177,8 +175,7 @@ class Main:
                     print("Erreur: aucun automate n'est sélectionné")
                 else:
                     if command[1] == "-v":
-                        if self.automaton.is_deterministic(debug=True):
-                            print("L'automate est déterministe")
+                        print("L'automate est déterministe") if self.automaton.is_deterministic() else print("L'automate n'est pas déterministe")
                     elif command[1] == "-a":
                         print("Automate déterminisé avec succès") if self.automaton.determine() else print("Erreur: l'automate est déjà déterministe")
                     else:
@@ -262,16 +259,13 @@ class Main:
         print(self.automaton)
 
 if __name__ == "__main__":
+
     main = Main()
 
     for i in range(44):
         if (i+1) not in [31, 32, 33, 34, 35]:
-            main.automatons.append(Automaton(f"automatons/B1-{i+1}.txt"))
+            main.automatons.append(Automaton(f"B1_automatons/B1-{i+1}.txt"))
             main.automaton = main.automatons[-1]
-
-    main.automaton = main.automatons[24]
-    main.automaton.determine()
-    print(main.automaton)
 
 
     main.loop()
