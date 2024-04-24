@@ -272,11 +272,4 @@ if __name__ == "__main__":
             main.automatons.append(Automaton(f"B1_automatons/B1-{i+1}.txt"))
             main.automaton = main.automatons[-1]
 
-    main.automaton = main.automatons[17]
-    main.automaton.determine()
-    main.automaton.complete()
-    print(main.automaton)
-    main.automaton.minimise()
-    print(main.automaton)
-
     main.loop()
