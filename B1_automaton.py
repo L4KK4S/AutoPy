@@ -348,8 +348,6 @@ class Automaton:
         if self.is_deterministic():
             return False
 
-        old_state = self.states.copy()
-
         # on récupère l'automate initial
         for state in self.states:
             if state.get_value() == "I":
@@ -377,7 +375,6 @@ class Automaton:
 
         # création d'un tableau temporaire contenant les destinations des arretes de chaque état
         temp_tab = self.fill_temp_tab()
-        print(temp_tab)
 
         # déterminisation de l'automate
         for i, state in enumerate(new_states):  # on parcourt les états
