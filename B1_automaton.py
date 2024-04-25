@@ -80,56 +80,63 @@ class Automaton:
 
     def __str__(self):
 
+
+        cell_size = 9
+
+        for state in self.states:
+            if len(state.get_value()) + 2 > cell_size:
+                cell_size = len(state.get_value()) + 2
+
         # nom du fichier de l'automate
         output = "\n" + self.filename + "\n"
 
         # haut de la table
-        output += "┌─────────" + "┬─────────" * (len(self.alphabet) + 1) + "┐\n"
+        output += "┌" + (cell_size * "─") + ("┬" + (cell_size * "─")) * (len(self.alphabet) + 1) + "┐\n"
 
         # entêtes
         headers = ["E/S", "État"] + self.alphabet
         output += "│"
         for header in headers:
-            output += (header.center(9) + "│")
+            output += (header.center(cell_size) + "│")
 
         output += "\n"
 
         # ligne de séparation
-        output += ("├─────────" + "┼─────────" * (len(self.alphabet) + 1) + "┤\n")
+        output += "├" + (cell_size * "─") + ("┼" + (cell_size * "─")) * (len(self.alphabet) + 1) + "┤\n"
 
         # transitions
         for s in self.states:
 
             # entrées/sorties
             if s.is_initial and s.is_terminal:
-                output += "│" + "E/S".center(9) + "│"
+                output += "│" + "E/S".center(cell_size) + "│"
             elif s.is_initial:
-                output += "│" + "E".center(9) + "│"
+                output += "│" + "E".center(cell_size) + "│"
             elif s.is_terminal:
-                output += "│" + "S".center(9) + "│"
+                output += "│" + "S".center(cell_size) + "│"
             else:
-                output += "│" + " ".center(9) + "│"
+                output += "│" + " ".center(cell_size) + "│"
 
             # état
-            output += (s.get_value().center(9) + "│")
+            output += (s.get_value().center(cell_size) + "│")
 
             # transitions
             for i, letter in enumerate(self.alphabet):
                 if s.transitions[self.alphabet[i]] and not s.is_composed:
-                    output += (",".join(map(str, s.transitions[self.alphabet[i]])).center(9) + "│")
+                    output += (",".join(map(str, s.transitions[self.alphabet[i]])).center(cell_size) + "│")
                 elif s.is_composed and s.transitions[self.alphabet[i]] != []:
-                    output += ("".join(s.transitions[self.alphabet[i]]).center(9) + "│")
+                    output += ("".join(s.transitions[self.alphabet[i]]).center(cell_size) + "│")
                 else:
-                    output += ("-".center(9) + "│")
+                    output += ("-".center(cell_size) + "│")
 
             output += "\n"
 
             # ligne de séparation
             if s != self.states[-1]:
-                output += ("├─────────" + "┼─────────" * (len(self.alphabet) + 1) + "┤\n")
+                output += "├" + (cell_size * "─") + ("┼" + (cell_size * "─")) * (len(self.alphabet) + 1) + "┤\n"
 
         # dernière ligne
-        output += ("└─────────" + "┴─────────" * (len(self.alphabet) + 1) + "┘")
+        output += "└" + (cell_size * "─") + ("┴" + (cell_size * "─")) * (len(self.alphabet) + 1) + "┘"
 
         return output
 
@@ -341,6 +348,8 @@ class Automaton:
         if self.is_deterministic():
             return False
 
+        old_state = self.states.copy()
+
         # on récupère l'automate initial
         for state in self.states:
             if state.get_value() == "I":
@@ -368,18 +377,20 @@ class Automaton:
 
         # création d'un tableau temporaire contenant les destinations des arretes de chaque état
         temp_tab = self.fill_temp_tab()
+        print(temp_tab)
 
         # déterminisation de l'automate
-        for i, state in enumerate(self.states):  # on parcourt les états
+        for i, state in enumerate(new_states):  # on parcourt les états
             for l in range(len(self.alphabet)):  # on parcourt les lettres de l'alphabet
-                value = ''.join(temp_tab[i][l])  # on récupère la valeur de la transition
+                index = [s.get_value() for s in self.states].index(state.get_value())
+                value = ''.join(temp_tab[index][l])  # on récupère la valeur de la transition
                 value = ''.join(sorted(value))  # on trie la valeur
                 if value not in [s.get_value() for s in new_states] and value != "":  # on vérifie si la transition n'est pas deja un état existant
                     if (self.check_doublons_tab(temp_tab[i][l])):  # si il y a des doublons dans les transitions on quitte la boucle
                         break
                     values = re.split(r'(?<!-)', value)
                     values = [x for x in values if x]
-                    self.states[i].transitions[self.alphabet[l]] = [value]  # on ajoute la transition à l'état
+                    self.states[index].transitions[self.alphabet[l]] = [value]  # on ajoute la transition à l'état
                     self.states.append(State(self, values, True, value))  # on ajoute un nouvel état avec comme valeur les valeurs de la transition vers un état pas encore existant
                     new_states.append(self.states[-1])  # on ajoute le nouvel état à la liste des nouveaux états
                     self.fill_transitions(self.states[-1])  # on remplit les transitions de ce nouvel état
@@ -432,7 +443,6 @@ class Automaton:
 
     # ------------------------------- Minimisation (Thomas) ------------------------------------ #
 
-    # méthode pour vérifier si l'automate est minimisé
     def is_minimised(self):
 
         # Si l'automate à 1 seul état ou moins, alors il est minimisé
@@ -453,7 +463,7 @@ class Automaton:
 
         # Si un des groupes est vide, alors l'automate est minimisé
         if P[0] == [] or P[1] == []:
-            return True
+            return False
 
         # Création du tableau de transitions
         cur_group = []
@@ -488,6 +498,7 @@ class Automaton:
                 for k in range(len(P)):
                     if (self.states[i].transitions.get(self.alphabet[j])[0] in P_str[k]):
                         cur_group[i].append(k)
+
 
         # Division des groupes
         P_new = []
@@ -551,6 +562,7 @@ class Automaton:
         P_prev = []
         P = [self.terminal_states, [state for state in self.states if state not in self.terminal_states]]
 
+
         while (P_prev != P) :
 
             # Création du tableau de transitions
@@ -587,6 +599,30 @@ class Automaton:
                     for k in range(len(P)):
                         if (self.states[i].transitions.get(self.alphabet[j])[0] in P_str[k]) :
                             cur_group[i].append(k)
+
+            if P[0] == [] or P[1] == []:
+                if P[0]==[] :
+                    state_val = f"0 ({','.join([s.get_value() for s in P[1]])})"
+                    self.states = [State(self, state_val)]
+                    for l in self.alphabet:
+                        self.states[0].transitions[l] = "0"
+                    self.states[0].is_terminal = 0
+                    self.states[0].is_initial = 1
+                    self.initals_states = self.states
+                    self.terminal_states = []
+                    self.initals_states = self.states
+                else :
+                    state_val = f"0 ({','.join([s.get_value() for s in P[0]])})"
+                    self.states = [State(self, state_val)]
+                    for l in self.alphabet:
+                        self.states[0].transitions[l] = "0"
+                    self.states[0].is_initial = 1
+                    self.states[0].is_terminal = 1
+                    self.initals_states = self.states
+                    self.terminal_states = self.states
+                    self.initals_states = self.states
+                return True
+
 
             # Division des groupes
             P_new = []
@@ -648,11 +684,12 @@ class Automaton:
         new_finals = []
         new_transitions = []
 
-        # Création des nouveaux étatsenumerate
+        # Création des nouveaux états enumerate
         for index, group in enumerate(P):
 
             # on crée un nouvel état
-            new_state = State(self, str(index))
+            state_val = f"{str(index)} ({','.join([s.get_value() for s in P[index]])})"
+            new_state = State(self, state_val)
 
             # on parcourt les transitions du nouvel état pour les remplir
             for l in self.alphabet:
@@ -687,7 +724,6 @@ class Automaton:
         self.update_initials_terminal()
 
         return True
-
 
     # ------------------------------------------------------------------------------------------ #
 
